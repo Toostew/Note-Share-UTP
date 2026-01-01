@@ -11,7 +11,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 //this is a test class to test the api for the file_records service
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/records")
 public class File_RecordsRESTController {
 
     private FileService fileService;

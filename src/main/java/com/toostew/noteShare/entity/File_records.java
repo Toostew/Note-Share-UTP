@@ -25,13 +25,13 @@ public class File_records {
     private String content_type;
 
     @Column(name = "size")
-    private int size;
+    private long size;
 
     @Column(name = "storage_path")
-    private String storage_path;
+    private String storage_path; //this is the bucket name
 
     @Column(name = "owner_id")
-    private int owner_id;
+    private int owner_id; //TODO: implement sign ins for user identification/authorization
 
     @Column(name = "date_created")
     private LocalDate date_created;
@@ -70,11 +70,11 @@ public class File_records {
         this.content_type = content_type;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
