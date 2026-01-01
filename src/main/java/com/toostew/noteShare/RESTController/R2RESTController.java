@@ -21,6 +21,7 @@ public class R2RESTController {
 
     @GetMapping("/test")
     public String test(){
+        s3client.listObjectsV2(ListObjectsV2Request.builder().bucket("mybucket").build());
         s3client.listObjectsV2(builder -> builder.bucket("first-storage"));
         return "if you are reading this, test successful";
     }

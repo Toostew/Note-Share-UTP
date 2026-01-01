@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileService {
     //this service is a layer for CRUD operations for File_records entities
+    //TODO: naming convention: rename the files on upload to follow a convention before uploading to object storage and mysql
+    //idea: id-originalname-datecreated
 
     private DAOInterface dao;
 
@@ -32,8 +34,6 @@ public class FileService {
     public void deleteFile_record(int id){
         dao.deleteFile_recordById(id);
     }
-
-
 
 
 
