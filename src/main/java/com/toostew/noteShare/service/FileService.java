@@ -3,12 +3,16 @@ package com.toostew.noteShare.service;
 import com.toostew.noteShare.DAO.DAOInterface;
 import com.toostew.noteShare.entity.File_records;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 public class FileService {
     //this service is a layer for CRUD operations for File_records entities
     //TODO: naming convention: rename the files on upload to follow a convention before uploading to object storage and mysql
-    //idea: id-originalname-datecreated
+    //idea: uuid-datecreated
 
     private DAOInterface dao;
 
@@ -17,6 +21,14 @@ public class FileService {
     public FileService(DAOInterface dao) {
         this.dao = dao;
     }
+
+    public String createNewFileRecordStoredName(){
+        UUID uuid = UUID.randomUUID();
+        LocalDate now = LocalDate.now();
+        return uuid.toString()+"-"+now.toString();
+    }
+
+
 
     //create
     public void createFile_record(File_records file_records){

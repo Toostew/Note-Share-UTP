@@ -10,7 +10,7 @@ public interface DAOInterface {
 
     File_records getFile_recordById(int id);
 
-    List<File_records> getFile_records();
+    List<File_records> getFile_records(int num);
 
     void deleteFile_recordById(int id);
 

@@ -1,4 +1,4 @@
 package com.toostew.noteShare.service;
 
-public class pageService {
+public class PageService {
 }
