@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public class FileService {
     //this service is a layer for CRUD operations for File_records entities
-    //TODO: naming convention: rename the files on upload to follow a convention before uploading to object storage and mysql
+    //DONE: naming convention: rename the files on upload to follow a convention before uploading to object storage and mysql
     //idea: uuid-datecreated
 
     private DAOInterface dao;
@@ -22,6 +22,8 @@ public class FileService {
         this.dao = dao;
     }
 
+    //generate a UUID for storing files following naming convention:
+    //UUID-DATE-CREATED
     public String createNewFileRecordStoredName(){
         UUID uuid = UUID.randomUUID();
         LocalDate now = LocalDate.now();
