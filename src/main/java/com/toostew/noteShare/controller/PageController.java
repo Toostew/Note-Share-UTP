@@ -39,7 +39,7 @@ public class PageController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/upload")
     public String test(Model model){
         //this will test the front facing controller for file uploads
         return "file-share";
@@ -91,7 +91,7 @@ public class PageController {
 
 
 
-    //for testing, renders the image by id
+    //for testing, renders image from database from id
     @GetMapping("/render/{id}")
     public ResponseEntity<Resource> render(@PathVariable int id){
         File_records temp = fileService.getFile_recordById(id);
@@ -100,7 +100,6 @@ public class PageController {
         ResponseEntity<Resource> response = r2Service.getObjectWithBucketAndKey(bucket,key);
         return response;
     }
-
 
 
 }
