@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>render test</title>
+    <title th:text="${file_record.original_name}"></title>
 </head>
 <body>
-    <img th:src="@{/page/render}">
+    <a>date created:</a>
+    <a th:text="${file_record.date_created}"></a>
+    <br>
+    <img th:src="@{/page/render/{id}(id=${id})}">
 </body>
 </html>

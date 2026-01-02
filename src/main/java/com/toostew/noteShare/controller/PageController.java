@@ -12,10 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.Response;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -83,37 +80,27 @@ public class PageController {
         return "redirect:/page/test";
     }
 
-    @GetMapping("/view")
-    public String view(Model model){
+    @GetMapping("/view/{id}")
+    public String view(@PathVariable int id, Model model){
+        File_records temp = fileService.getFile_recordById(id);
+        model.addAttribute("file_record",temp);
+        model.addAttribute("id",id);
         return "render";
     }
 
 
 
 
-    //for testing, deprecated
-    /*
-    @GetMapping("/render")
-    public ResponseEntity<Resource> render(Model model){
-
-
-        //getObject takes GetObjectRequest as an Argument
-        //we must provide GetObjectRequest with the bucket name and full key
-
-        ResponseInputStream<GetObjectResponse> stream =
-            s3client.getObject(
-                    GetObjectRequest.builder()
-                            .bucket("first-storage")
-                            .key("ThePalouse-1296-3200x2133.jpg")
-                    .build()
-            );
-
-        InputStreamResource resource = new InputStreamResource(stream);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(resource);
+    //for testing, renders the image by id
+    @GetMapping("/render/{id}")
+    public ResponseEntity<Resource> render(@PathVariable int id){
+        File_records temp = fileService.getFile_recordById(id);
+        String bucket = temp.getStorage_path();
+        String key = temp.getStored_name();
+        ResponseEntity<Resource> response = r2Service.getObjectWithBucketAndKey(bucket,key);
+        return response;
     }
-    */
+
 
 
 }
