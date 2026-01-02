@@ -82,12 +82,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--AWS Bill Of Materials, looks for versions automatically-->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>bom</artifactId>
-            <version>2.41.0</version>
-        </dependency>
+
 
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
