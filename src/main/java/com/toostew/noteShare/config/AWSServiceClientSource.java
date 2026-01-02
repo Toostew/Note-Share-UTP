@@ -39,6 +39,9 @@ public class AWSServiceClientSource {
         //Identity and Access Management (IAM) and Security Token Service, both not used by R2
         //NOTE2: we specify the URI to point to cloudflare, following cloudflare convention
         try{
+            System.out.println("DEBUG: creating s3Client with:");
+            System.out.println("accessKeyId: " + accessKeyId);
+            System.out.println("secretAccessKey: " + secretAccessKey);
             S3Client s3Client = S3Client.builder()
                     .region(Region.of("auto")) // set region to auto, per R2 specs
                     .endpointOverride( //set the endpoint to R2 from cloudflare
