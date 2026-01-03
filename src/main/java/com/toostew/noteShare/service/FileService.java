@@ -2,6 +2,8 @@ package com.toostew.noteShare.service;
 
 import com.toostew.noteShare.DAO.DAOInterface;
 import com.toostew.noteShare.entity.File_records;
+import com.toostew.noteShare.exception.pojo.other.FileServiceException;
+import com.toostew.noteShare.exception.pojo.other.File_recordsDAOException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,19 +36,33 @@ public class FileService {
 
     //create
     public void createFile_record(File_records file_records){
-        dao.createFile_records(file_records);
+        try{
+            dao.createFile_records(file_records);
+        } catch(File_recordsDAOException e){
+            throw new FileServiceException(e.getMessage(),e);
+        }
+
     }
 
     //read
     public File_records getFile_recordById(int id){
-        return dao.getFile_recordById(id);
+        try{
+            return dao.getFile_recordById(id);
+        } catch(File_recordsDAOException e){
+            throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
+        }
+
     }
 
     //update
 
     //delete
     public void deleteFile_record(int id){
-        dao.deleteFile_recordById(id);
+        try{
+            dao.deleteFile_recordById(id);
+        } catch(File_recordsDAOException e){
+            throw new FileServiceException("Issue at FileService, issue with deleting File_record by id",e);
+        }
     }
 
 

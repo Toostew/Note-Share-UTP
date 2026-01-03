@@ -3,6 +3,9 @@ package com.toostew.noteShare.controller;
 
 
 import com.toostew.noteShare.entity.File_records;
+import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
+import com.toostew.noteShare.exception.pojo.other.FileServiceException;
+import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.FileService;
 import com.toostew.noteShare.service.R2Service;
 import org.springframework.core.io.InputStreamResource;
@@ -21,6 +24,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
@@ -45,6 +49,8 @@ public class PageController {
         return "file-share";
     }
 
+    //TODO:implement the rest of exception handling throughout code, and refactor code to pass underlying issues if they occur
+
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file){
 
@@ -66,18 +72,24 @@ public class PageController {
         temp.setOwner_id(owner_id);
         temp.setDate_created(date_created);
 
-        //submit the File_records
+        //convertMultipartFile into inputStream
+        try{
+            InputStream inputStream = file.getInputStream();
+            //send inputStream to object storage
+            r2Service.postObjectWithBucketAndKey(storage_path,stored_name,inputStream,size,content_type);
+            System.out.println("attempting to communicate with R2");
+
+        } catch(IOException e){
+            //issue with converting into inputstream
+            throw new PageControllerException("Issue in PageController, issue getting inputStream from MultiPartFile",e);
+        } catch(R2ServiceException e){
+            throw new PageControllerException("Issue in PageController, couldn't upload to R2 Service",e);
+        }
+
+        //submission to fileRecords only happens if no exception is returned to prevent false entries
         fileService.createFile_record(temp);
 
-        //convertMultipartFile into inputStream
-        InputStream inputStream = r2Service.processMultiPartFile(file);
-
-        //send inputStream to object storage
-        r2Service.postObjectWithBucketAndKey(storage_path,stored_name,inputStream,size,content_type);
-        System.out.println("attempting to communicate with R2");
-
-
-        return "redirect:/page/test";
+        return "redirect:/page/upload";
     }
 
     @GetMapping("/view/{id}")
@@ -91,7 +103,7 @@ public class PageController {
 
 
 
-    //for testing, renders image from database from id
+    //for testing, renders image from database using id
     @GetMapping("/render/{id}")
     public ResponseEntity<Resource> render(@PathVariable int id){
         File_records temp = fileService.getFile_recordById(id);
@@ -100,6 +112,28 @@ public class PageController {
         ResponseEntity<Resource> response = r2Service.getObjectWithBucketAndKey(bucket,key);
         return response;
     }
+
+    //for testing delete operation
+    @GetMapping("/delete/{id}")
+    public String deleteObjectAndRecord(@PathVariable int id){
+        //get the record, and delete it's associated object
+
+        try{
+            System.out.println("Attempting to delete file of id: "+id);
+            File_records temp = fileService.getFile_recordById(id);
+            String bucket = temp.getStorage_path();
+            String key = temp.getStored_name();
+            r2Service.deleteObjectWithBucketAndKey(bucket,key);
+            System.out.println("deleted file of id: "+id);
+        } catch(R2ServiceException e){
+            throw new PageControllerException("Issue in PageController, Issue with Deleting Object with Bucket and Key",e);
+        } catch(FileServiceException e){
+            throw new PageControllerException("Issue in PageController, Issue with getting file by ID",e);
+        }
+        return "redirect:/page/upload";
+    }
+
+
 
 
 }

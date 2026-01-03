@@ -12,6 +12,7 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -69,10 +70,10 @@ public class R2Service {
 
         } catch (AwsServiceException e) {
             //R2AWS Client issue
-            throw new R2ServiceException("Issue with Get Object at R2Service layer",e);
+            throw new R2ServiceException("Issue with Get Object at R2Service layer, R2 Server issue",e);
         } catch (SdkClientException e) {
             //SDK client side issue
-            throw new R2ServiceException("Issue with Get Object at R2Service layer",e);
+            throw new R2ServiceException("Issue with Get Object at R2Service layer, client issue",e);
         }
 
 
@@ -84,6 +85,8 @@ public class R2Service {
 
 
     //convert multipart to inputStream
+    //deprecated, MultipartFile already has a built in getInputStream()
+    /*
     public InputStream processMultiPartFile(MultipartFile multipartFile){
         try{
             //we can only really use these files meaningfully while they are in an inputstream
@@ -93,6 +96,8 @@ public class R2Service {
             throw new R2ServiceException("Issue with processing Multipart File at R2Service layer",e);
         }
     }
+    */
+
 
     public void postObjectWithBucketAndKey(String bucket, String key, InputStream inputStream, long size, String contentType){
         try{
@@ -106,11 +111,24 @@ public class R2Service {
                     //the size MUST be precise, else we risk failed uploads
             );
         } catch (AwsServiceException e){
-            throw new R2ServiceException("Issue with Post Object at R2Service layer",e);
+            throw new R2ServiceException("Issue with Post Object at R2Service layer, R2 Server issue",e);
         } catch (SdkClientException e){
-            throw new R2ServiceException("Issue with Post Object at R2Service layer",e);
+            throw new R2ServiceException("Issue with Post Object at R2Service layer, client issue",e);
         }
 
+    }
+    //delete the object in question, this should only be done in tandem with removing the appropriate File_records
+    public void deleteObjectWithBucketAndKey(String bucket, String key){
+        try{
+            s3client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build());
+        } catch(AwsServiceException e){
+            throw new R2ServiceException("Issue with Delete Object at R2Service layer, R2 Server issue",e);
+        } catch (SdkClientException e){
+            throw new R2ServiceException("Issue with Delete Object at R2Service layer, client issue",e);
+        }
     }
 
 

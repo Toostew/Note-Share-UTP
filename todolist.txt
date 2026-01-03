@@ -4,7 +4,7 @@ here are all the things that I need to implement
 2. File metadata storage service DONE
 3. front facing page controller DONE
 4. Cloudflare R2 service DONE
-5. basic exception handling
+5. basic exception handling DONE
 6. bubble up exception handling to front facing UI
 7. upgrade frontend to a more suitable UI
 8. better auth with in-database access
