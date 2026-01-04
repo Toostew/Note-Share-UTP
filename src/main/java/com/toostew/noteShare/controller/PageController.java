@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping("/page")
 public class PageController {
     //front facing api
 
@@ -43,20 +42,30 @@ public class PageController {
         this.fileService = fileService;
     }
 
+    @GetMapping("/")
+    public String index(Model model){
+        //returns the main menu
+        return "index";
+    }
+
+
+
+
+
+
     @GetMapping("/upload")
     public String test(Model model){
         //this will test the front facing controller for file uploads
         return "file-share";
     }
 
-    //TODO:implement the rest of exception handling throughout code, and refactor code to pass underlying issues if they occur
 
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file){
 
         //create a File_record to store metadata
         String original_name = file.getOriginalFilename();
-        String stored_name = fileService.createNewFileRecordStoredName();
+        String stored_name = fileService.createNewFileRecordStoredName(); //this generates with UUID-LOCALDATE
         String content_type = file.getContentType();
         long size = file.getSize();
         String storage_path = "first-storage";
@@ -89,28 +98,38 @@ public class PageController {
         //submission to fileRecords only happens if no exception is returned to prevent false entries
         fileService.createFile_record(temp);
 
-        return "redirect:/page/upload";
+        return "redirect:/upload";
     }
 
     @GetMapping("/view/{id}")
     public String view(@PathVariable int id, Model model){
-        File_records temp = fileService.getFile_recordById(id);
-        model.addAttribute("file_record",temp);
-        model.addAttribute("id",id);
-        return "render";
+        try {
+            File_records temp = fileService.getFile_recordById(id);
+            model.addAttribute("file_record",temp);
+            model.addAttribute("id",id);
+            return "render";
+        }catch(FileServiceException e){
+            throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
+        }
     }
-
-
 
 
     //for testing, renders image from database using id
     @GetMapping("/render/{id}")
     public ResponseEntity<Resource> render(@PathVariable int id){
-        File_records temp = fileService.getFile_recordById(id);
-        String bucket = temp.getStorage_path();
-        String key = temp.getStored_name();
-        ResponseEntity<Resource> response = r2Service.getObjectWithBucketAndKey(bucket,key);
-        return response;
+        try{
+            File_records temp = fileService.getFile_recordById(id);
+            String bucket = temp.getStorage_path();
+            String key = temp.getStored_name();
+            ResponseEntity<Resource> response = r2Service.getObjectWithBucketAndKey(bucket,key);
+            return response;
+        } catch(FileServiceException e){
+            throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
+        } catch(R2ServiceException e){
+            //R2 Service issue
+            throw new PageControllerException("Issue in PageController, Couldn't retrieve object from R2",e);
+        }
+
     }
 
     //for testing delete operation
@@ -132,6 +151,12 @@ public class PageController {
         }
         return "redirect:/page/upload";
     }
+
+
+
+
+
+
 
 
 
