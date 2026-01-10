@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+    <h3>There was an Unexpected issue :(</h3>
+    <br>
+    <br>
+    <p th:text="${issueMessage}"></p>
+    <br>
+    <a th:href="@{/}">Return to the main menu</a>
+</body>
+</html>

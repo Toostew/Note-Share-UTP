@@ -6,8 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation;
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 
 import java.net.URI;
 
@@ -43,6 +46,9 @@ public class AWSServiceClientSource {
                     .endpointOverride( //set the endpoint to R2 from cloudflare
                             URI.create("https://6deeea551209efbc172e1f67a4033678.r2.cloudflarestorage.com"))
                     .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId,secretAccessKey)))
+                    .serviceConfiguration(S3Configuration.builder()
+                            .checksumValidationEnabled(false) //at the current moment, there is no better alternative
+                            .build())
                     .build();
 
             return s3Client;

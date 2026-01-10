@@ -131,7 +131,8 @@ public class R2Service {
         }
     }
 
-
+    //when getting an object from R2, we are crafting a HTTP response, and in it, we need to specify a contentType
+    //contentType only accepts it in the format of Mediatype, so we parse the String ContentType through here to get a mediaType match
     private MediaType contentTypeDetect(String contentType){
         //images
         if(contentType == null){
@@ -146,6 +147,7 @@ public class R2Service {
         else if(contentType.equals("image/gif")){
             return MediaType.IMAGE_GIF;
         }
+
 
         //pdf
         else if(contentType.equals("application/pdf")){
