@@ -45,18 +45,14 @@ public class PageController {
     @GetMapping("/")
     public String index(Model model){
         //returns the main menu
-        return "index";
+        return "main-menu";
     }
-
-
-
-
 
 
     @GetMapping("/upload")
     public String test(Model model){
         //this will test the front facing controller for file uploads
-        return "file-share";
+        return "upload";
     }
 
 
@@ -101,8 +97,19 @@ public class PageController {
         return "redirect:/upload";
     }
 
+    @GetMapping("/view")
+    public String view(){
+        return "view";
+    }
+
+    @GetMapping("/statistics")
+    public String statistics(Model model){
+        return "statistics";
+    }
+
+
     @GetMapping("/view/{id}")
-    public String view(@PathVariable int id, Model model){
+    public String viewWithId(@PathVariable int id, Model model){
         try {
             File_records temp = fileService.getFile_recordById(id);
             model.addAttribute("file_record",temp);
