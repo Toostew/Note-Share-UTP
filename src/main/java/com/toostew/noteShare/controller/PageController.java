@@ -3,11 +3,13 @@ package com.toostew.noteShare.controller;
 
 
 import com.toostew.noteShare.entity.File_records;
+import com.toostew.noteShare.entity.Statistics;
 import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
 import com.toostew.noteShare.exception.pojo.other.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.FileService;
 import com.toostew.noteShare.service.R2Service;
+import com.toostew.noteShare.service.StatisticsService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -35,11 +37,13 @@ public class PageController {
     private S3Client s3client;
     private R2Service r2Service;
     private FileService fileService;
+    private StatisticsService statisticsService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
+        this.statisticsService = statisticsService;
     }
 
     @GetMapping("/")
@@ -104,6 +108,10 @@ public class PageController {
 
     @GetMapping("/statistics")
     public String statistics(Model model){
+        Statistics statistics = statisticsService.getStatistics();
+        double statisticsInMegaBytes = Math.round((double)statistics.getEgress_volume()/1000000);
+        model.addAttribute("statistics", statistics);
+        model.addAttribute("egressInMegaBytes", statisticsInMegaBytes);
         return "statistics";
     }
 
@@ -115,7 +123,7 @@ public class PageController {
             model.addAttribute("file_record",temp);
             model.addAttribute("id",id);
             return "render";
-        }catch(FileServiceException e){
+        } catch(FileServiceException e){
             throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
         }
     }

@@ -2,14 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Error</title>
+    <title>UTP Note Share</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <h3>There was an Unexpected issue :(</h3>
-    <br>
-    <br>
-    <p th:text="${issueMessage}"></p>
-    <br>
-    <a th:href="@{/}">Return to the main menu</a>
+<body class="min-h-screen bg-gray-200">
+<header class="h-20 bg-sky-800 border-b flex items-center px-6">
+
+    <div class="items-center flex-column">
+        <h1 class=" font-sans text-2xl tracking-tighter text-left text-white">UTP Note Share</h1>
+        <div class="flex gap-0.5">
+            <h1 class=" font-sans text-xs tracking-tighter text-white">Project by</h1>
+            <a class=" font-sans text-xs tracking-tighter text-white hover:text-sky-400" href="https://github.com/Toostew" target="_blank">Toostew</a>
+        </div>
+    </div>
+
+</header>
+
+<div class="flex">
+    <aside class="w-40 bg-white border-r min-h-screen p-1 flex flex-col gap-0.5">
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/view}">Main Menu</a>
+        </div>
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/view}">View</a>
+        </div>
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/upload}">Upload</a>
+        </div>
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/statistics}">Statistics</a>
+        </div>
+    </aside>
+
+
+    <main class="flex-1 p-4 space-y-4 max-w-4xl w-full">
+        <h1 class="text-3xl font-mono tracking-tight">
+            There was an issue with that request :(
+        </h1>
+        <h1 class="text-base font-mono tracking-tighter" th:text="${issueMessage}">
+
+        </h1>
+    </main>
+</div>
 </body>
 </html>

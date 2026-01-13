@@ -29,12 +29,15 @@ public class ExceptionHandlingAdvice {
         return "error/error";
     }
 
+
     @ExceptionHandler(Exception.class)
     public String genericExceptionHandler(Exception ex, Model model){
         ex.printStackTrace();
         model.addAttribute("issueMessage", "An unepected error occurred, please try again later");
         return "error/error";
     }
+
+
 
 
 }

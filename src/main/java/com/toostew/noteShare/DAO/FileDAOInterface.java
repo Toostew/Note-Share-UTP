@@ -4,7 +4,7 @@ import com.toostew.noteShare.entity.File_records;
 
 import java.util.List;
 
-public interface DAOInterface {
+public interface FileDAOInterface {
 
     void createFile_records(File_records file_records);
 

@@ -1,6 +1,6 @@
 package com.toostew.noteShare.DAO.impl;
 
-import com.toostew.noteShare.DAO.DAOInterface;
+import com.toostew.noteShare.DAO.FileDAOInterface;
 import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.exception.pojo.other.File_recordsDAOException;
 import jakarta.persistence.*;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public class File_recordsDAOImpl implements DAOInterface {
+public class File_recordsFileDAOImpl implements FileDAOInterface {
 
     private EntityManager entityManager;
 
 
-    public File_recordsDAOImpl() {}
+    public File_recordsFileDAOImpl() {}
 
     @Autowired
-    public File_recordsDAOImpl(EntityManager entityManager) {
+    public File_recordsFileDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

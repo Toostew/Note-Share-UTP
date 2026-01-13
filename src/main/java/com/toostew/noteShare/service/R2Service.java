@@ -26,9 +26,11 @@ import java.io.InputStream;
 public class R2Service {
 
     private S3Client s3client;
+    private StatisticsService statisticsService;
 
-    public R2Service(S3Client s3client) {
+    public R2Service(S3Client s3client,StatisticsService statisticsService) {
         this.s3client = s3client; //s3client is the class that handles all the r2 operations. think of it as a DAO
+        this.statisticsService = statisticsService;
     }
 
 
@@ -54,6 +56,7 @@ public class R2Service {
             //return object metadata, we need the filetype
             GetObjectResponse response = responseInputStream.response();
             String contentType = response.contentType(); //we now have the retrieved item's datatype
+            long size = response.contentLength();
 
             //InputStreamResource is a Resource implementation of InputStream
             //we can fill the body of a http response with a resource, so we must make a resource
@@ -61,6 +64,9 @@ public class R2Service {
             //we can also pass a description for later
             InputStreamResource resource = new InputStreamResource(responseInputStream,"description");
 
+            //if everything is alright, we increment the object transactions
+            statisticsService.incrementObjectTrasactions();
+            statisticsService.incrementEgressVolume(size);
 
             //here we build a http response
             return ResponseEntity.ok()
@@ -110,6 +116,9 @@ public class R2Service {
                     RequestBody.fromInputStream(inputStream,size)
                     //the size MUST be precise, else we risk failed uploads
             );
+            //if there is no issue, increment the statistics
+            statisticsService.incrementEgressVolume(size);
+            statisticsService.incrementObjectTrasactions();
         } catch (AwsServiceException e){
             throw new R2ServiceException("Issue with Post Object at R2Service layer, R2 Server issue",e);
         } catch (SdkClientException e){

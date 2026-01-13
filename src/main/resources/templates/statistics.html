@@ -41,8 +41,20 @@
             Statistics
         </h1>
 
-        <h1 class="text-base font-mono tracking-tight">
-            Statistics found here
+        <h1 class="text-xl font-mono tracking-tight">
+            Egress Volume: <span th:text="${statistics.egress_volume} + ' Bytes '"></span>|<span th:text="' '+${egressInMegaBytes} + ' MB'"></span>
+        </h1>
+
+        <h1 class="text-xl font-mono tracking-tight">
+            Database Transactions: <span th:text="${statistics.database_transactions}"></span>
+        </h1>
+
+        <h1 class="text-xl font-mono tracking-tight">
+            Object Transactions: <span th:text="${statistics.object_transactions}"></span>
+        </h1>
+
+        <h1 class="text-xl font-mono tracking-tight">
+            Last Transaction: <span th:text="${statistics.updated_at}"></span>
         </h1>
 
 
