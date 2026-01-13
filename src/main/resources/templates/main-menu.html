@@ -6,7 +6,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="min-h-screen bg-gray-100">
+<body class="min-h-screen bg-gray-200">
 <header class="h-20 bg-sky-800 border-b flex items-center px-6">
 
     <div class="items-center flex-column">
@@ -21,8 +21,8 @@
 
 <div class="flex">
     <aside class="w-40 bg-white border-r min-h-screen p-1 flex flex-col gap-0.5">
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600">Main Menu</a>
+        <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
+            <a>Main Menu</a>
         </div>
         <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
             <a class="hover:text-sky-600">View</a>
@@ -36,8 +36,30 @@
     </aside>
 
 
-    <main class="flex-1 p-4">
+    <main class="flex-1 p-4 space-y-4 max-w-4xl w-full">
+        <h1 class="text-3xl font-mono tracking-tight">
+            Welcome to UTP Note Share!
+        </h1>
 
+        <h1 class="text-base font-mono tracking-tighter">
+            This service allows you to upload and view images, PDFs, Files and Documents related to your course. All materials are
+            provided by fellow students and everyone is welcome to contribute!
+        </h1>
+        <h1 class="text-base font-mono tracking-tighter">
+            Click on the <span class="text-sky-600">View</span>
+            tab on the left panel to access files already uploaded. You can sort by course, date, file type and more. (Not Implemented!)
+        </h1>
+        <h1 class="text-base font-mono tracking-tighter">
+            Click on the <span class="text-sky-600">Upload</span>
+            tab to upload files to the service. Supported file types include Images (JPEG, PNG), PDFs, WORD, and txt.
+            Files must not exceed 20 MB. Duplicate files are technically able to be uploaded although this is not recommended,
+            and files that are found to be exact copies will be purged at any time.
+        </h1>
+        <h1 class="text-base font-mono tracking-tighter">
+            Click on the <span class="text-sky-600">Statistics</span>
+            tab to view statistics about the service. We track the number of transactions, database queries (lookups/ CRUD operations)
+            as well as total data egress volume.
+        </h1>
     </main>
 </div>
 </body>
