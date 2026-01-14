@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.annotations.NotNull;
 import software.amazon.awssdk.core.Response;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -59,7 +60,7 @@ public class PageController {
         return "upload";
     }
 
-
+    //Physically looks for a parameter called file, hence, the form input name must be called file as well.
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file){
 
