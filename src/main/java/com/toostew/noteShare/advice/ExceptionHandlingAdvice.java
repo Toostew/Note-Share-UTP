@@ -6,6 +6,7 @@ import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 //this is a controller meant to display exceptions that occur during runtime
 @ControllerAdvice
@@ -34,6 +35,14 @@ public class ExceptionHandlingAdvice {
     public String genericExceptionHandler(Exception ex, Model model){
         ex.printStackTrace();
         model.addAttribute("issueMessage", "An unepected error occurred, please try again later");
+        return "error/error";
+    }
+
+    //because of how it is implemented, chances are this is never called
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String multipartExceedsExceptionHandler(MaxUploadSizeExceededException ex, Model model){
+        ex.printStackTrace();
+        model.addAttribute("issueMessage", "The file exceeded the legal limit, please try again");
         return "error/error";
     }
 

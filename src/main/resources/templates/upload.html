@@ -5,6 +5,7 @@
     <title>UTP Note Share</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!--TODO:add a proper script to prevent uploads that are above 25MB that shows the error page-->
 </head>
 <body class="min-h-screen bg-gray-200">
 <header class="h-20 bg-sky-800 border-b flex items-center px-6">
@@ -59,8 +60,11 @@
                     class="min-w-full py-2 px-4  bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                 Upload File
             </button>
-            <p class="mt-1 text-sm" id="file_input_help">Max file size of 20MB</p>
+            <p class="mt-1 text-sm" id="file_input_help">Max file size of 25MB</p>
         </form>
+        <p th:if="${error}"
+           th:text="${error}"
+           class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50"></p>
 
 
     </main>

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import software.amazon.awssdk.annotations.NotNull;
 import software.amazon.awssdk.core.Response;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -62,7 +63,17 @@ public class PageController {
 
     //Physically looks for a parameter called file, hence, the form input name must be called file as well.
     @PostMapping("/fileReceived")
-    public String fileReceived(@RequestParam(name = "file") MultipartFile file){
+    public String fileReceived(@RequestParam(name = "file") MultipartFile file, Model model, RedirectAttributes redirectAttributes){
+
+        //we need to check if the file is empty, if it is, redirect back to upload but with the model
+        //also check if the file exceeds 20MB
+        if(file.isEmpty() || file.getSize() == 0){
+            redirectAttributes.addFlashAttribute("error", "Please select a file");
+            return "redirect:/upload";
+        } else if(file.getSize() > 2e+7){
+            redirectAttributes.addFlashAttribute("error", "File size exceeds 20MB");
+            return "redirect:/upload";
+        }
 
         //create a File_record to store metadata
         String original_name = file.getOriginalFilename();
