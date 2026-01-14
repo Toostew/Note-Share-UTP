@@ -12,6 +12,7 @@ import com.toostew.noteShare.service.R2Service;
 import com.toostew.noteShare.service.StatisticsService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class PageController {
@@ -113,10 +115,16 @@ public class PageController {
         return "redirect:/upload";
     }
 
+    //list every single object in "islands"
     @GetMapping("/view")
-    public String view(){
+    public String view(Model model){
+        //for now we want to just view all of the items so -1
+        List<File_records> list = fileService.getNumFile_Records(-1);
+        model.addAttribute("ObjectList", list);
         return "view";
     }
+
+
 
     @GetMapping("/statistics")
     public String statistics(Model model){
@@ -141,8 +149,9 @@ public class PageController {
     }
 
 
-    //for testing, renders image from database using id
+    //returns a HTTP response used to view images
     @GetMapping("/render/{id}")
+    @ResponseBody
     public ResponseEntity<Resource> render(@PathVariable int id){
         try{
             File_records temp = fileService.getFile_recordById(id);
@@ -157,6 +166,33 @@ public class PageController {
             throw new PageControllerException("Issue in PageController, Couldn't retrieve object from R2",e);
         }
 
+    }
+
+    //handling downloads
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> download(@PathVariable int id){
+        try{
+            File_records temp = fileService.getFile_recordById(id);
+            Resource tempPayload =  r2Service.getObjectWithBucketAndKey(temp.getStorage_path(),temp.getStored_name()).getBody();
+
+            //we need the file type and the original name
+            String originalName = temp.getOriginal_name();
+            String fileType = temp.getContent_type();
+
+
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(fileType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + originalName + "\"")
+                    .body(tempPayload);
+
+        } catch(FileServiceException e){
+            throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
+        } catch(R2ServiceException e){
+            //R2 Service issue
+            throw new PageControllerException("Issue in PageController, Couldn't retrieve object from R2",e);
+        }
     }
 
     //for testing delete operation
@@ -178,6 +214,8 @@ public class PageController {
         }
         return "redirect:/page/upload";
     }
+
+
 
 
 

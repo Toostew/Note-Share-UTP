@@ -2,12 +2,55 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${file_record.original_name}"></title>
+    <title>UTP Note Share</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <a>date created:</a>
-    <a th:text="${file_record.date_created}"></a>
-    <br>
-    <img th:src="@{/render/{id}(id=${id})}">
+<body class="min-h-screen bg-gray-200">
+<header class="h-20 bg-sky-800 border-b flex items-center px-6">
+
+    <div class="items-center flex-column">
+        <h1 class=" font-sans text-2xl tracking-tighter text-left text-white">UTP Note Share</h1>
+        <div class="flex gap-0.5">
+            <h1 class=" font-sans text-xs tracking-tighter text-white">Project by</h1>
+            <a class=" font-sans text-xs tracking-tighter text-white hover:text-sky-400" href="https://github.com/Toostew" target="_blank">Toostew</a>
+        </div>
+    </div>
+
+</header>
+
+<div class="flex min-h-screen">
+    <aside class="w-40 bg-white border-r  p-1 flex flex-col gap-0.5">
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
+        </div>
+        <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
+            <a>View</a>
+        </div>
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/upload}">Upload</a>
+        </div>
+        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
+            <a class="hover:text-sky-600" th:href="@{/statistics}">Statistics</a>
+        </div>
+    </aside>
+
+
+    <main class="flex-1 p-4 space-y-4 w-full h-full">
+        <div class="flex-1 p-4 space-y-4 max-w-4xl min-w-3xl">
+            <h1 class="text-3xl font-mono tracking-tight" th:text="${file_record.original_name}"></h1>
+            <h1 class="text-base font-mono tracking-tight" th:text="${file_record.date_created}"></h1>
+            <h1 class="text-base font-mono tracking-tight" th:text="${file_record.stored_name}"></h1>
+            <h1 class="text-base font-mono tracking-tight" th:text="${file_record.storage_path}"></h1>
+            <h1 class="text-base font-mono tracking-tight" th:text="${file_record.id}"></h1>
+        </div>
+
+        <img th:src="@{/render/{id}(id=${file_record.id})}" class="object-contain w-full h-full">
+        <a th:href="@{/download/{id}(id=${file_record.id})}" class="block text-center leading-10 text-base text-white w-40 h-10 bg-blue-600 hover:bg-blue-700 rounded-md shadow-md transition">
+            Download
+        </a>
+
+    </main>
+</div>
 </body>
 </html>

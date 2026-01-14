@@ -51,7 +51,7 @@ public class File_recordsFileDAOImpl implements FileDAOInterface {
         //if num is <= 0, retrieve all records, if above 0, retrieve first num records
         try{
             TypedQuery<File_records> query = entityManager.createQuery("from File_records f", File_records.class);
-            if(num > 0){
+            if(num >= 0){
                 query.setMaxResults(num);
             }
             List<File_records> file_records_list = query.getResultList();

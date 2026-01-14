@@ -19,8 +19,8 @@
 
 </header>
 
-<div class="flex">
-    <aside class="w-40 bg-white border-r min-h-screen p-1 flex flex-col gap-0.5">
+<div class="flex min-h-screen">
+    <aside class="w-40 bg-white border-r  p-1 flex flex-col gap-0.5">
         <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
             <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
         </div>
@@ -36,13 +36,24 @@
     </aside>
 
 
-    <main class="flex-1 p-4 space-y-4 max-w-4xl w-full">
+    <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl">
         <h1 class="text-3xl font-mono tracking-tight">
             View Files
         </h1>
-        <h1 class="text-base font-mono tracking-tight">
-            Not yet implemented :(
-        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class=" bg-white rounded-md shadow-md border h-128" th:each="FileRecord : ${ObjectList}">
+                <div class="flex-1 flex p-1 h-96 overflow-hidden">
+                    <img th:src="@{/render/{id}(id=${FileRecord.id})}" class="object-cover w-full h-full">
+                </div>
+                <div class="w-full h-full p-2 gap-1 overflow-hidden">
+                    <a th:href="@{/view/{id}(id=${FileRecord.id})}" class="text-base hover:text-sky-500 " th:text="'Name: '+${FileRecord.original_name}"></a>
+                    <p class="text-base " th:text="'Date: '+${FileRecord.date_created}"></p>
+                </div>
+            </div>
+        </div>
+
+
+
 
 
     </main>

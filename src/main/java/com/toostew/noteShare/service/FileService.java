@@ -7,9 +7,11 @@ import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.exception.pojo.other.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.File_recordsDAOException;
 import com.toostew.noteShare.exception.pojo.other.StatisticsServiceException;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -62,6 +64,17 @@ public class FileService {
             throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
         }
 
+    }
+
+    //read a certain number of entries. If -1, return all
+    public List<File_records> getNumFile_Records(int num){
+        try{
+            return dao.getFile_records(num);
+        } catch(File_recordsDAOException e){
+            throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
+        } catch(StatisticsServiceException e){
+            throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
+        }
     }
 
     //update
