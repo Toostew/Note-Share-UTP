@@ -2,14 +2,14 @@ package com.toostew.noteShare.controller;
 
 
 
+import com.toostew.noteShare.entity.Course;
 import com.toostew.noteShare.entity.File_records;
+import com.toostew.noteShare.entity.Owner;
 import com.toostew.noteShare.entity.Statistics;
 import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
 import com.toostew.noteShare.exception.pojo.other.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
-import com.toostew.noteShare.service.FileService;
-import com.toostew.noteShare.service.R2Service;
-import com.toostew.noteShare.service.StatisticsService;
+import com.toostew.noteShare.service.*;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -42,12 +42,16 @@ public class PageController {
     private R2Service r2Service;
     private FileService fileService;
     private StatisticsService statisticsService;
+    private OwnerService ownerService;
+    private CourseService courseService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,OwnerService ownerService,CourseService courseService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
         this.statisticsService = statisticsService;
+        this.ownerService = ownerService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/")
@@ -59,13 +63,19 @@ public class PageController {
 
     @GetMapping("/upload")
     public String test(Model model){
-        //this will test the front facing controller for file uploads
+        //provide list of courses to select
+        List<Course> courseList = courseService.getAllCourses();
+        model.addAttribute("courses", courseList);
+
         return "upload";
     }
 
     //Physically looks for a parameter called file, hence, the form input name must be called file as well.
     @PostMapping("/fileReceived")
-    public String fileReceived(@RequestParam(name = "file") MultipartFile file, Model model, RedirectAttributes redirectAttributes){
+    public String fileReceived(@RequestParam(name = "file") MultipartFile file,
+                               @RequestParam(name = "courseId") int courseId,
+                               Model model,
+                               RedirectAttributes redirectAttributes){
 
         //we need to check if the file is empty, if it is, redirect back to upload but with the model
         //also check if the file exceeds 20MB
@@ -83,7 +93,14 @@ public class PageController {
         String content_type = file.getContentType();
         long size = file.getSize();
         String storage_path = "first-storage";
-        int owner_id = 0;
+
+        //debugging only, hardcoded owner stats
+        Owner tempOwner = new Owner();
+        tempOwner.setName("admin");
+        tempOwner.setId(1);
+
+
+
         LocalDate date_created = LocalDate.now();
 
         File_records temp = new File_records();
@@ -92,7 +109,8 @@ public class PageController {
         temp.setContent_type(content_type);
         temp.setSize(size);
         temp.setStorage_path(storage_path);
-        temp.setOwner_id(owner_id);
+        temp.setOwner(tempOwner); //set temp owner
+        temp.setCourse(courseService.getCourse(courseId)); //set course by selection
         temp.setDate_created(date_created);
 
         //convertMultipartFile into inputStream

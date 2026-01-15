@@ -30,11 +30,17 @@ public class File_records {
     @Column(name = "storage_path")
     private String storage_path; //this is the bucket name
 
-    @Column(name = "owner_id")
-    private int owner_id; //TODO: implement sign ins for user identification/authorization
+
+    @OneToOne
+    @JoinColumn(name="owner_id")
+    private Owner owner;
 
     @Column(name = "date_created")
     private LocalDate date_created;
+
+    @OneToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     public File_records() {}
 
@@ -86,12 +92,12 @@ public class File_records {
         this.storage_path = storage_path;
     }
 
-    public int getOwner_id() {
-        return owner_id;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setOwner_id(int owner_id) {
-        this.owner_id = owner_id;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 
     public LocalDate getDate_created() {
@@ -102,6 +108,10 @@ public class File_records {
         this.date_created = date_created;
     }
 
+    public Course getCourse() {return course;}
+
+    public void setCourse(Course course) {this.course = course;}
+
     @Override
     public String toString() {
         return "FILE: " + "\n"
@@ -111,7 +121,8 @@ public class File_records {
                 + "content_type: " + content_type + "\n"
                 + "size: " + size + "\n"
                 + "storage_path: " + storage_path + "\n"
-                + "owner_id: " + owner_id + "\n"
-                + "date_created: " + date_created + "\n";
+                + "owner_id: " + owner.getId() + "\n"
+                + "date_created: " + date_created + "\n"
+                + "course_id: " + course.getId() + "\n";
     }
 }
