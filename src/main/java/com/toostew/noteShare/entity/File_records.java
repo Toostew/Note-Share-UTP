@@ -31,14 +31,14 @@ public class File_records {
     private String storage_path; //this is the bucket name
 
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="owner_id")
     private Owner owner;
 
     @Column(name = "date_created")
     private LocalDate date_created;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 

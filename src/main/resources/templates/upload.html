@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>UTP Note Share</title>
-
+    <!--for some fucking reason it wont work unless the cdn is available even though tailwind CLI is up-->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!--TODO:add a proper script to prevent uploads that are above 25MB that shows the error page-->
 </head>
@@ -26,7 +26,7 @@
             <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
         </div>
         <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/view}">View</a>
+            <a class="hover:text-sky-600" th:href="@{/view-categories}">View</a>
         </div>
         <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
             <a>Upload</a>
@@ -56,19 +56,15 @@
                file:bg-blue-50 file:text-blue-700
                hover:file:bg-blue-100" id="file_input" type="file" name="file" accept="image/*,application/pdf">
 
-            <div th:each="course : ${courses}">
-                <input
-                        type="radio"
-                        name="courseId"
-                        th:id="'course_' + ${course.id}"
-                        th:value="${course.id}"
-                        required
-                />
-                <label
-                        th:for="'course_' + ${course.id}"
-                        th:text="${course.name}"
-                        class="font-mono text-sm"
-                ></label>
+            <div>
+                <label></label>
+                <select name="courseId" required class="border-0 bg-gray-200 rounded-md">
+                    <option value="" disabled selected>
+                        --choose a course--
+                    </option>
+                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}">
+                    </option>
+                </select>
             </div>
 
 

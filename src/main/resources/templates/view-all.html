@@ -48,6 +48,7 @@
                 <div class="w-full h-full p-2 gap-1 overflow-hidden">
                     <a th:href="@{/view/{id}(id=${FileRecord.id})}" class="text-base hover:text-sky-500 " th:text="'Name: '+${FileRecord.original_name}"></a>
                     <p class="text-base " th:text="'Date: '+${FileRecord.date_created}"></p>
+                    <p class="text-base " th:text="'Category: ' +${FileRecord.course.name}"></p>
                 </div>
             </div>
         </div>

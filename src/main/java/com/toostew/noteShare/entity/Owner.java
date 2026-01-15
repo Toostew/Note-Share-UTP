@@ -3,6 +3,8 @@ package com.toostew.noteShare.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Owner {
 
@@ -14,6 +16,9 @@ public class Owner {
 
     @Column(name="name")
     private String name;
+
+    @OneToMany(mappedBy = "owner")
+    private List<File_records> file_recordsList;
 
 
 

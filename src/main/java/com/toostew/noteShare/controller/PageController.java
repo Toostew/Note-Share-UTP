@@ -134,12 +134,21 @@ public class PageController {
     }
 
     //list every single object in "islands"
-    @GetMapping("/view")
+    @GetMapping("/view-all")
     public String view(Model model){
         //for now we want to just view all of the items so -1
         List<File_records> list = fileService.getNumFile_Records(-1);
         model.addAttribute("ObjectList", list);
-        return "view";
+        return "view-all";
+    }
+
+    //view categories
+    @GetMapping("/view-categories")
+    public String view_categories(Model model){
+        List<Course> courseList = courseService.getAllCourses();
+        model.addAttribute("courses", courseList);
+
+        return "view-categories";
     }
 
 
