@@ -41,17 +41,20 @@
 
         </h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class=" bg-white rounded-md shadow-md border h-128" th:each="fileRecord : ${fileRecordsInCourse}">
-                <div class="flex-1 flex p-1 h-96 overflow-hidden">
-                    <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
-                </div>
-                <div class="w-full h-full p-2 gap-1 overflow-hidden">
-                    <a th:href="@{/view/{id}(id=${fileRecord.id})}" class="text-base hover:text-sky-500 " th:text="${fileRecord.original_name}"></a>
+            <div class=" bg-white rounded-md shadow-md border h-128 hover:bg-gray-200 transition" th:each="fileRecord : ${fileRecordsInCourse}">
+                <a th:href="@{/view/{id}(id=${fileRecord.id})}" >
+                    <div class="flex-1 flex p-1 h-96 overflow-hidden">
+                        <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
+                    </div>
+                    <div class="w-full h-full p-2 gap-1 overflow-hidden">
+                        <p  class="text-base " th:text="${fileRecord.original_name}"></p>
 
-                    <p th:text="'Id: ' + ${fileRecord.id}"></p>
-                    <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
-                    <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
-                </div>
+                        <p th:text="'Id: ' + ${fileRecord.id}"></p>
+                        <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
+                        <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
+                    </div>
+                </a>
+
             </div>
         </div>
 
