@@ -87,5 +87,14 @@ public class OwnerDAOImpl implements OwnerDAOInterface {
     }
 
 
+    @Override
+    public List<File_records> getFileRecordsList(int ownerId) {
+        try{
+            Owner owner = em.find(Owner.class, ownerId);
+            return owner.getFile_recordsList();
+        } catch(EntityNotFoundException e){
+            throw new OwnerDAOException("Issue in OwnerDAO, Entity Not Found!", e);
+        }
 
+    }
 }

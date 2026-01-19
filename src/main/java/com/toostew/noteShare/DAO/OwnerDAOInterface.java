@@ -21,5 +21,5 @@ public interface OwnerDAOInterface {
 
     void deleteOwner(int id);
 
-
+    List<File_records> getFileRecordsList(int ownerId);
 }

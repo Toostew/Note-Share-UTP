@@ -17,7 +17,8 @@ public class Owner {
     @Column(name="name")
     private String name;
 
-    @OneToMany(mappedBy = "owner")
+    //we do not include cascades because cascade operations will affect every associated entity
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<File_records> file_recordsList;
 
 
