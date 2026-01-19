@@ -3,6 +3,7 @@ package com.toostew.noteShare.DAO;
 
 
 
+import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.entity.Owner;
 
 import java.util.List;
@@ -19,5 +20,6 @@ public interface OwnerDAOInterface {
     void updateOwner(Owner owner);
 
     void deleteOwner(int id);
+
 
 }

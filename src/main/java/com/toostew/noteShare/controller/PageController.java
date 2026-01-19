@@ -151,6 +151,15 @@ public class PageController {
         return "view-categories";
     }
 
+    @GetMapping("/view-category/{courseId}")
+    public String view_category(@PathVariable("courseId") int courseId, Model model){
+
+        model.addAttribute("fileRecordsInCourse", courseService.getFile_recordsList(courseId));
+        model.addAttribute("course", courseService.getCourse(courseId)); //attribute: Associated course
+
+        return "view-category-withID";
+    }
+
 
 
     @GetMapping("/statistics")
@@ -169,7 +178,7 @@ public class PageController {
             File_records temp = fileService.getFile_recordById(id);
             model.addAttribute("file_record",temp);
             model.addAttribute("id",id);
-            return "render";
+            return "render"; //do not be confused with the mapping render and the html render
         } catch(FileServiceException e){
             throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
         }

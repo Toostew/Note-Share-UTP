@@ -21,7 +21,7 @@ public class Owner {
     private List<File_records> file_recordsList;
 
 
-
+    //Id
     public int getId() {
         return id;
     }
@@ -29,11 +29,20 @@ public class Owner {
         this.id = id;
     }
 
-
+    //Name
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    //FileRecord
+    public List<File_records> getFile_recordsList() {
+        return file_recordsList;
+    }
+    public void setFile_recordsList(List<File_records> file_recordsList) {
+        this.file_recordsList = file_recordsList;
     }
 }

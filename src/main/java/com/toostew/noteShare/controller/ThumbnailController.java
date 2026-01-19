@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/thumbnail")
 public class ThumbnailController {
-    //controller for thumbnail generation
+    //controller for thumbnail generation, for view-categories
 
 
     @GetMapping("/{category}")

@@ -17,7 +17,6 @@
         </div>
     </div>
 
-
 </header>
 
 <div class="flex min-h-screen">
@@ -26,7 +25,7 @@
             <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
         </div>
         <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
-            <a>View</a>
+            <a class="hover:text-sky-600" th:href="@{/view-categories}">View</a>
         </div>
         <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
             <a class="hover:text-sky-600" th:href="@{/upload}">Upload</a>
@@ -38,21 +37,23 @@
 
 
     <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl">
-        <h1 class="text-3xl font-mono tracking-tight">
-            View Files
+        <h1 class="text-3xl font-mono tracking-tight" th:text="${course.name}">
+
         </h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class=" bg-white rounded-md shadow-md border h-128" th:each="course : ${courses}">
+            <div class=" bg-white rounded-md shadow-md border h-128" th:each="fileRecord : ${fileRecordsInCourse}">
                 <div class="flex-1 flex p-1 h-96 overflow-hidden">
-                    <img th:src="@{/thumbnail/{category}(category=${course.category})}" class="object-cover w-full h-full">
+                    <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
                 </div>
                 <div class="w-full h-full p-2 gap-1 overflow-hidden">
-                    <a th:href="@{/view-category/{courseId}(courseId=${course.id})}" class="text-base hover:text-sky-500 " th:text="${course.name}"></a>
+                    <a th:href="@{/view/{id}(id=${fileRecord.id})}" class="text-base hover:text-sky-500 " th:text="${fileRecord.original_name}"></a>
+
+                    <p th:text="'Id: ' + ${fileRecord.id}"></p>
+                    <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
+                    <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
                 </div>
             </div>
         </div>
-
-
 
 
 

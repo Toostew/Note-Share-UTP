@@ -1,6 +1,7 @@
 package com.toostew.noteShare.DAO.impl;
 
 import com.toostew.noteShare.DAO.OwnerDAOInterface;
+import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.entity.Owner;
 import com.toostew.noteShare.exception.pojo.other.OwnerDAOException;
 import jakarta.persistence.*;
@@ -84,4 +85,7 @@ public class OwnerDAOImpl implements OwnerDAOInterface {
             throw new OwnerDAOException("Issue in OwnerDAO, unexpected issue!", e);
         }
     }
+
+
+
 }

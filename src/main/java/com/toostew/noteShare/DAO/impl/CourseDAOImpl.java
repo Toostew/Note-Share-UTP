@@ -2,13 +2,16 @@ package com.toostew.noteShare.DAO.impl;
 
 import com.toostew.noteShare.DAO.CourseDAOInterface;
 import com.toostew.noteShare.entity.Course;
+import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.exception.pojo.other.CourseDAOException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,6 +23,9 @@ public class CourseDAOImpl implements CourseDAOInterface {
         this.em = em;
     }
 
+
+    //at the current moment there is no need to update or delete courses via java, this can be done via DDA
+    @Transactional
     @Override
     public void createCourse(Course course) {
         try{
@@ -62,9 +68,24 @@ public class CourseDAOImpl implements CourseDAOInterface {
         //can do so directly via workbench
     }
 
+    @Transactional
     @Override
     public void deleteCourse(int id) {
         //not implemented, currently there is no need to be able to delete or update courses from java
         //can do so via workbench instead
+    }
+
+
+    //File_record handling
+    //with
+    @Override
+    public List<File_records> getFileRecordsList(int courseId) {
+        try{
+            Course temp = em.find(Course.class, courseId);
+            return temp.getFile_recordsList();
+        } catch(EntityNotFoundException e){
+            throw new CourseDAOException("Issue in CourseDAO, Course not found!", e);
+        }
+
     }
 }
