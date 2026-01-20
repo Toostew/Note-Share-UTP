@@ -242,13 +242,17 @@ public class PageController {
             String bucket = temp.getStorage_path();
             String key = temp.getStored_name();
             r2Service.deleteObjectWithBucketAndKey(bucket,key);
-            System.out.println("deleted file of id: "+id);
+            System.out.println("deleted file of id: "+id+" from object storage"); //deleted in R2 Cloudflare
+            //delete File_record
+            fileService.deleteFile_record(id);
+            System.out.println("deleted File_record of id: "+id);
+
         } catch(R2ServiceException e){
             throw new PageControllerException("Issue in PageController, Issue with Deleting Object with Bucket and Key",e);
         } catch(FileServiceException e){
             throw new PageControllerException("Issue in PageController, Issue with getting file by ID",e);
         }
-        return "redirect:/page/upload";
+        return "redirect:/";
     }
 
 
