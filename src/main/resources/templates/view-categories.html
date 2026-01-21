@@ -20,35 +20,38 @@
 
 </header>
 
-<div class="flex min-h-screen">
-    <aside class="w-40 bg-white border-r  p-1 flex flex-col gap-0.5">
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
-        </div>
-        <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
-            <a>View</a>
-        </div>
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/upload}">Upload</a>
-        </div>
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/statistics}">Statistics</a>
-        </div>
+<div class="flex min-h-screen overflow-hidden">
+    <aside class="w-40 bg-white border-r min-h-screen p-1 flex flex-col gap-0.5">
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/}">
+            <p>Main Menu</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/view-categories}">
+            <p>View</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/upload}">
+            <p>Upload</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/statistics}">
+            <p>Statistics</p>
+        </a>
     </aside>
 
 
-    <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl">
+    <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl overflow-y-visible">
         <h1 class="text-3xl font-mono tracking-tight">
-            View Files
+            Courses
         </h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class=" bg-white rounded-md shadow-md border h-128" th:each="course : ${courses}">
-                <div class="flex-1 flex p-1 h-96 overflow-hidden">
-                    <img th:src="@{/thumbnail/{category}(category=${course.category})}" class="object-cover w-full h-full">
-                </div>
-                <div class="w-full h-full p-2 gap-1 overflow-hidden">
-                    <a th:href="@{/view-category/{courseId}(courseId=${course.id})}" class="text-base hover:text-sky-500 " th:text="${course.name}"></a>
-                </div>
+            <div class=" bg-white rounded-md shadow-md border h-128 hover:bg-gray-200 hover:opacity-90 transition" th:each="course : ${courses}">
+                <a th:href="@{/view-category/{courseId}(courseId=${course.id})}">
+                    <div class="flex-1 flex p-1 h-96 overflow-hidden">
+                        <img th:src="@{/thumbnail/{category}(category=${course.category})}" class="object-cover w-full h-full">
+                    </div>
+                    <div class="w-full h-full p-2 gap-1 overflow-hidden">
+                        <p class="text-base" th:text="${course.name}"></p>
+                    </div>
+                </a>
+
             </div>
         </div>
 

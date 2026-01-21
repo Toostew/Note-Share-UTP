@@ -6,7 +6,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="min-h-screen bg-gray-200">
+<body class="min-h-screen bg-gray-200 flex flex-col">
 <header class="h-20 bg-sky-800 border-b flex items-center px-6">
 
     <div class="items-center flex-column">
@@ -18,32 +18,32 @@
     </div>
 
 </header>
-
-<div class="flex min-h-screen">
-    <aside class="w-40 bg-white border-r  p-1 flex flex-col gap-0.5">
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/}">Main Menu</a>
-        </div>
-        <div class="w-full h-20 border p-2 bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/view-categories}">View</a>
-        </div>
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/upload}">Upload</a>
-        </div>
-        <div class="w-full h-20 border p-2 hover:bg-gray-200 hover:underline font-mono text-lg">
-            <a class="hover:text-sky-600" th:href="@{/statistics}">Statistics</a>
-        </div>
+<!--this is the category specific view, should only see files-->
+<div class="flex flex-1 items-stretch overflow-hidden">
+    <aside class="w-40 bg-white border-r p-1 flex flex-col gap-0.5">
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/}">
+            <p>Main Menu</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/view-categories}">
+            <p>View</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/upload}">
+            <p>Upload</p>
+        </a>
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/statistics}">
+            <p>Statistics</p>
+        </a>
     </aside>
 
 
-    <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl">
+    <main class="flex-1 p-4 space-y-4 max-w-full min-w-3xl overflow-y-visible">
         <h1 class="text-3xl font-mono tracking-tight" th:text="${course.name}">
 
         </h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class=" bg-white rounded-md shadow-md border h-128 hover:bg-gray-200 transition" th:each="fileRecord : ${fileRecordsInCourse}">
+            <div class=" bg-white rounded-md shadow-md border hover:bg-gray-200 hover:opacity-90 transition" th:each="fileRecord : ${fileRecordsInCourse}">
                 <a th:href="@{/view/{id}(id=${fileRecord.id})}" >
-                    <div class="flex-1 flex p-1 h-96 overflow-hidden">
+                    <div class="flex-1 flex p-1 aspect-square overflow-hidden">
                         <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
                     </div>
                     <div class="w-full h-full p-2 gap-1 overflow-hidden">
