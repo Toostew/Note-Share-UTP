@@ -26,6 +26,14 @@ public class UserService {
 
     }
 
+    public User getUserByUsername(String username) {
+        try{
+            return userDAO.getUserByUsername(username);
+        } catch(UserDAOException e){
+            throw new UserServiceException("Issue in User Service,Could not get User by Username", e);
+        }
+    }
+
 
 
 }

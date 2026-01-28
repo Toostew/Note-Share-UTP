@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,18 @@ public class PageController {
     public String index(Model model){
         //returns the main menu
         return "main-menu";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "/auth/login-page";
+    }
+
+
+    @GetMapping("/check")
+    public String check(Authentication authentication) {
+        // If successful, this will print your username
+        return "Logged in as: " + authentication.getName();
     }
 
 

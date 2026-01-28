@@ -46,4 +46,12 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Authorities> getAuthoritiesList() {
+        return authoritiesList;
+    }
+
+    public void setAuthoritiesList(List<Authorities> authoritiesList) {
+        this.authoritiesList = authoritiesList;
+    }
 }
