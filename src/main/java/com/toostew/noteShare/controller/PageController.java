@@ -2,10 +2,7 @@ package com.toostew.noteShare.controller;
 
 
 
-import com.toostew.noteShare.entity.Course;
-import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.entity.Owner;
-import com.toostew.noteShare.entity.Statistics;
+import com.toostew.noteShare.entity.*;
 import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
 import com.toostew.noteShare.exception.pojo.other.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
@@ -42,15 +39,13 @@ public class PageController {
     private R2Service r2Service;
     private FileService fileService;
     private StatisticsService statisticsService;
-    private OwnerService ownerService;
     private CourseService courseService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,OwnerService ownerService,CourseService courseService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
         this.statisticsService = statisticsService;
-        this.ownerService = ownerService;
         this.courseService = courseService;
     }
 
@@ -95,9 +90,10 @@ public class PageController {
         String storage_path = "first-storage";
 
         //debugging only, hardcoded owner stats
-        Owner tempOwner = new Owner();
-        tempOwner.setName("admin");
-        tempOwner.setId(1);
+        User tempUser = new User();
+        tempUser.setId(1);
+        tempUser.setPassword("{noop}1234");
+        tempUser.setUsername("admin");
 
 
 
@@ -109,7 +105,7 @@ public class PageController {
         temp.setContent_type(content_type);
         temp.setSize(size);
         temp.setStorage_path(storage_path);
-        temp.setOwner(tempOwner); //set temp owner
+        temp.setUser(tempUser); //set temp owner
         temp.setCourse(courseService.getCourse(courseId)); //set course by selection
         temp.setDate_created(date_created);
 

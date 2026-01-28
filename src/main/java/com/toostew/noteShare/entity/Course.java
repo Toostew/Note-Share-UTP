@@ -21,6 +21,7 @@ public class Course {
 
 
     //we need to set it to eager fetching so it fetches everything
+    //mapped by course, which is the field within File_records
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<File_records> file_recordsList = new ArrayList<>();
 

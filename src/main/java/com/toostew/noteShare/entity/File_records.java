@@ -32,8 +32,8 @@ public class File_records {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="owner_id")
-    private Owner owner;
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(name = "date_created")
     private LocalDate date_created;
@@ -92,12 +92,12 @@ public class File_records {
         this.storage_path = storage_path;
     }
 
-    public Owner getOwner() {
-        return owner;
+    public User getUser() {
+        return user;
     }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getDate_created() {
@@ -123,7 +123,7 @@ public class File_records {
                 + "content_type: " + content_type + "\n"
                 + "size: " + size + "\n"
                 + "storage_path: " + storage_path + "\n"
-                + "owner_id: " + owner.getId() + "\n"
+                + "user_id: " + user.getId() + "\n"
                 + "date_created: " + date_created + "\n"
                 + "course_id: " + course.getId() + "\n";
     }

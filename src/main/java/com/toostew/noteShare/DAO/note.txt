@@ -1,0 +1,4 @@
+TODO: at the current momemt, each DAO uses it's own interface which is redundant and not really useful
+    a future task would be to refactor the code to eliminate the use of interfaces, or perhaps use a generic interface that all
+       the impls can reference
+       for now, all new DAOs no konger need their own interface
