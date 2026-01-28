@@ -2,8 +2,8 @@ package com.toostew.noteShare.service;
 
 import com.toostew.noteShare.DAO.StatisticsDAOInterface;
 import com.toostew.noteShare.entity.Statistics;
-import com.toostew.noteShare.exception.pojo.other.StatisticsDAOException;
-import com.toostew.noteShare.exception.pojo.other.StatisticsServiceException;
+import com.toostew.noteShare.exception.pojo.DAO.StatisticsDAOException;
+import com.toostew.noteShare.exception.pojo.service.StatisticsServiceException;
 import org.springframework.stereotype.Service;
 
 

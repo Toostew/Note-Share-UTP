@@ -2,7 +2,7 @@ package com.toostew.noteShare.DAO.impl;
 
 import com.toostew.noteShare.DAO.FileDAOInterface;
 import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.exception.pojo.other.File_recordsDAOException;
+import com.toostew.noteShare.exception.pojo.DAO.File_recordsDAOException;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

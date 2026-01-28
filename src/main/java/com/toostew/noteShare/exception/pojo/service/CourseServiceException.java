@@ -1,4 +1,4 @@
-package com.toostew.noteShare.exception.pojo.other;
+package com.toostew.noteShare.exception.pojo.service;
 
 public class CourseServiceException extends RuntimeException {
     public CourseServiceException(String message, Throwable cause) {

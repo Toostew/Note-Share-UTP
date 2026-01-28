@@ -1,4 +1,4 @@
-package com.toostew.noteShare.exception.pojo.other;
+package com.toostew.noteShare.exception.pojo.service;
 
 //issue occurred at FileService layer
 public class FileServiceException extends RuntimeException{

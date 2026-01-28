@@ -2,6 +2,8 @@ package com.toostew.noteShare.service.auth;
 
 import com.toostew.noteShare.DAO.auth.AuthoritiesDAO;
 import com.toostew.noteShare.entity.Authorities;
+import com.toostew.noteShare.exception.pojo.DAO.AuthoritiesDAOException;
+import com.toostew.noteShare.exception.pojo.service.AuthoritiesServiceException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +18,11 @@ public class AuthoritiesService {
     }
 
     public Authorities getAuthoritiesById(int id) {
-        return authoritiesDAO.getAuthoritiesById(id);
+        try{
+            return authoritiesDAO.getAuthoritiesById(id);
+        } catch (AuthoritiesDAOException e) {
+            throw new AuthoritiesServiceException("Issue in Authorities Service, Could not get Authorities by ID", e);
+        }
+
     }
 }

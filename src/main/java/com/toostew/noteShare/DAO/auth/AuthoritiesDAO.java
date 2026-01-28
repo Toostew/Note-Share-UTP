@@ -2,7 +2,9 @@ package com.toostew.noteShare.DAO.auth;
 
 import com.toostew.noteShare.entity.Authorities;
 import com.toostew.noteShare.entity.User;
+import com.toostew.noteShare.exception.pojo.DAO.AuthoritiesDAOException;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,7 +23,12 @@ public class AuthoritiesDAO {
 
     //Read
     public Authorities getAuthoritiesById(int id){
-        return em.find(Authorities.class, id);
+        try{
+            return em.find(Authorities.class, id);
+        } catch (EntityNotFoundException e) {
+            throw new AuthoritiesDAOException("Issue in AuthoritiesDAO, Authorities not found!", e);
+        }
+
     }
 
     //update

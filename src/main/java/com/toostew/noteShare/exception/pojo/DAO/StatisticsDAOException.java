@@ -1,4 +1,4 @@
-package com.toostew.noteShare.exception.pojo.other;
+package com.toostew.noteShare.exception.pojo.DAO;
 
 public class StatisticsDAOException extends RuntimeException {
     public StatisticsDAOException(String message, Throwable e) {

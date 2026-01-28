@@ -1,13 +1,10 @@
 package com.toostew.noteShare.service;
 
 import com.toostew.noteShare.DAO.FileDAOInterface;
-import com.toostew.noteShare.DAO.StatisticsDAOInterface;
-import com.toostew.noteShare.DAO.impl.File_recordsFileDAOImpl;
 import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.exception.pojo.other.FileServiceException;
-import com.toostew.noteShare.exception.pojo.other.File_recordsDAOException;
-import com.toostew.noteShare.exception.pojo.other.StatisticsServiceException;
-import jakarta.persistence.TypedQuery;
+import com.toostew.noteShare.exception.pojo.service.FileServiceException;
+import com.toostew.noteShare.exception.pojo.DAO.File_recordsDAOException;
+import com.toostew.noteShare.exception.pojo.service.StatisticsServiceException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

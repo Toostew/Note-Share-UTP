@@ -3,9 +3,8 @@ package com.toostew.noteShare.service;
 import com.toostew.noteShare.DAO.CourseDAOInterface;
 import com.toostew.noteShare.entity.Course;
 import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.exception.pojo.other.CourseDAOException;
-import com.toostew.noteShare.exception.pojo.other.CourseServiceException;
-import com.toostew.noteShare.exception.pojo.other.OwnerDAOException;
+import com.toostew.noteShare.exception.pojo.DAO.CourseDAOException;
+import com.toostew.noteShare.exception.pojo.service.CourseServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

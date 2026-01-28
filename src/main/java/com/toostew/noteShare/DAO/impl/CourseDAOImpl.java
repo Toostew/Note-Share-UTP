@@ -3,7 +3,7 @@ package com.toostew.noteShare.DAO.impl;
 import com.toostew.noteShare.DAO.CourseDAOInterface;
 import com.toostew.noteShare.entity.Course;
 import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.exception.pojo.other.CourseDAOException;
+import com.toostew.noteShare.exception.pojo.DAO.CourseDAOException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,7 +11,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

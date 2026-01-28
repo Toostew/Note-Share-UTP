@@ -1,9 +1,8 @@
 package com.toostew.noteShare.DAO.impl;
 
-import com.toostew.noteShare.DAO.FileDAOInterface;
 import com.toostew.noteShare.DAO.StatisticsDAOInterface;
 import com.toostew.noteShare.entity.Statistics;
-import com.toostew.noteShare.exception.pojo.other.StatisticsDAOException;
+import com.toostew.noteShare.exception.pojo.DAO.StatisticsDAOException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.transaction.Transactional;

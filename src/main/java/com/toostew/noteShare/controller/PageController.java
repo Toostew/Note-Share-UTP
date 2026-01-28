@@ -4,13 +4,11 @@ package com.toostew.noteShare.controller;
 
 import com.toostew.noteShare.entity.*;
 import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
-import com.toostew.noteShare.exception.pojo.other.FileServiceException;
+import com.toostew.noteShare.exception.pojo.service.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.*;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,13 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import software.amazon.awssdk.annotations.NotNull;
-import software.amazon.awssdk.core.Response;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 
 import java.io.IOException;
 import java.io.InputStream;

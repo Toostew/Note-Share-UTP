@@ -2,6 +2,8 @@ package com.toostew.noteShare.service.auth;
 
 import com.toostew.noteShare.DAO.auth.UserDAO;
 import com.toostew.noteShare.entity.User;
+import com.toostew.noteShare.exception.pojo.DAO.UserDAOException;
+import com.toostew.noteShare.exception.pojo.service.UserServiceException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,12 @@ public class UserService {
     }
 
     public User getUserById(int id) {
-        return userDAO.getUserById(id);
+        try{
+            return userDAO.getUserById(id);
+        } catch(UserDAOException e){
+            throw new UserServiceException("Issue in User Service,Could not get User by ID", e);
+        }
+
     }
 
 
