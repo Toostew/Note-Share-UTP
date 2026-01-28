@@ -49,23 +49,36 @@ spring will look for it in resources/static-->
             Login
         </h1>
 
-        <div class="flex-col">
-            <form th:action="@{/authenticate-user}" method="post">
-                <input type="text" id="username" name="username" placeholder="Username">
-                <input type="password" id="password" name="password" placeholder="Password">
-                <input type="submit" value="login">
+        <div class="flex flex-col max-w-4xl mt-10 p-6 bg-white rounded-2xl shadow-md space-y-4">
+
+            <form th:action="@{/authenticate-user}" method="post" class="max-w-full space-y-4">
+                <input class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="text" id="username" name="username" placeholder="Username">
+                <input class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="password" id="password" name="password" placeholder="Password">
+
+                <div class="flex flex-row gap-4">
+                    <button type="submit" class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                        Login
+                    </button>
+                </div>
             </form>
+
+            <div sec:authorize="isAuthenticated()" class="w-full">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="w-full py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+                        Logout
+                    </button>
+                </form>
+            </div>
+
+            <div th:if="${param.logout}">
+                <p class="text-green-500 font-bold">You have been logged out!</p>
+            </div>
+            <div th:if="${param.error}">
+                <p class="text-red-500 font-bold">Invalid username or password.</p>
+            </div>
         </div>
 
-        <div th:if="${param.logout}">
-            <p class="accent-red-500">You have been logged out!</p>
-        </div>
 
-        <div>
-            <form action="#" th:action="@{/logout}" method="post">
-                <input type="submit" value="logout">
-            </form>
-        </div>
 
     </main>
 </div>

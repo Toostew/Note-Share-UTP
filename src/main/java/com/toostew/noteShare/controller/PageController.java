@@ -7,6 +7,7 @@ import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
 import com.toostew.noteShare.exception.pojo.service.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.*;
+import com.toostew.noteShare.service.auth.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,13 +34,15 @@ public class PageController {
     private FileService fileService;
     private StatisticsService statisticsService;
     private CourseService courseService;
+    private UserService userService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
         this.statisticsService = statisticsService;
         this.courseService = courseService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -75,7 +78,8 @@ public class PageController {
     public String fileReceived(@RequestParam(name = "file") MultipartFile file,
                                @RequestParam(name = "courseId") int courseId,
                                Model model,
-                               RedirectAttributes redirectAttributes){
+                               RedirectAttributes redirectAttributes,
+                               Authentication authentication){
 
         //we need to check if the file is empty, if it is, redirect back to upload but with the model
         //also check if the file exceeds 20MB
@@ -94,11 +98,19 @@ public class PageController {
         long size = file.getSize();
         String storage_path = "first-storage";
 
+        /*
         //debugging only, hardcoded owner stats
         User tempUser = new User();
         tempUser.setId(1);
         tempUser.setPassword("{noop}1234");
         tempUser.setUsername("admin");
+        */
+
+        //create user
+        User user =  userService.getUserByUsername(authentication.getName());
+
+
+
 
 
 
@@ -110,7 +122,7 @@ public class PageController {
         temp.setContent_type(content_type);
         temp.setSize(size);
         temp.setStorage_path(storage_path);
-        temp.setUser(tempUser); //set temp owner
+        temp.setUser(user); //set owner
         temp.setCourse(courseService.getCourse(courseId)); //set course by selection
         temp.setDate_created(date_created);
 
