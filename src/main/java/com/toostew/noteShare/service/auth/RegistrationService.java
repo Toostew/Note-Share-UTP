@@ -1,5 +1,6 @@
 package com.toostew.noteShare.service.auth;
 
+import com.toostew.noteShare.entity.Authorities;
 import com.toostew.noteShare.entity.User;
 import com.toostew.noteShare.exception.pojo.service.UserServiceException;
 import org.springframework.stereotype.Service;
@@ -8,18 +9,22 @@ import java.lang.Character;
 
 @Service
 public class RegistrationService {
+    private final AuthoritiesService authoritiesService;
     //this Service is for handling new user registration
 
     private UserService userService;
 
-    public RegistrationService(UserService userService) {
+    public RegistrationService(UserService userService, AuthoritiesService authoritiesService) {
         this.userService = userService;
+        this.authoritiesService = authoritiesService;
     }
 
 
     public void registerNewUser(String username, String password){
         //username and password check occurs outside of this method
         //method assumes the username and password are both valid
+
+        //user is saved into database first, then recaptured to be used to create the authorities
         password = "{noop}"  + password; //spring security requirement, needs either noop or bcrypt
         User user = new User();
         user.setUsername(username);
@@ -27,8 +32,15 @@ public class RegistrationService {
         user.setEnabled(true);
 
 
-        System.out.println("Registering New User: " + username + " " + password);
+        System.out.println("Registering New User: " + username + " " + password + "without authorities");
         userService.createUser(user);
+
+        //we persist the user then recapture, because we need user with a generated id to use in creating authorities
+        User temp = userService.getUserByUsername(username);
+
+        //create authorities, hardcode USER rank inside
+        Authorities authorities = authoritiesService.buildAuthorities("USER", temp);
+        authoritiesService.createAuthorities(authorities); //persist authorities into the database
     }
 
 

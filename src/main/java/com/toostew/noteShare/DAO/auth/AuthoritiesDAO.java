@@ -5,6 +5,7 @@ import com.toostew.noteShare.entity.User;
 import com.toostew.noteShare.exception.pojo.DAO.AuthoritiesDAOException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,6 +21,11 @@ public class AuthoritiesDAO {
 
 
     //Create
+    @Transactional
+    public void createAuthorities(Authorities authorities) throws AuthoritiesDAOException {
+        em.persist(authorities);
+    }
+
 
     //Read
     public Authorities getAuthoritiesById(int id){

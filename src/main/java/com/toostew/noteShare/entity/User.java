@@ -65,4 +65,8 @@ public class User {
     public void setAuthoritiesList(List<Authorities> authoritiesList) {
         this.authoritiesList = authoritiesList;
     }
+
+    public void addAuthority(Authorities authorities){
+        authoritiesList.add(authorities);
+    }
 }

@@ -2,6 +2,7 @@ package com.toostew.noteShare.service.auth;
 
 import com.toostew.noteShare.DAO.auth.AuthoritiesDAO;
 import com.toostew.noteShare.entity.Authorities;
+import com.toostew.noteShare.entity.User;
 import com.toostew.noteShare.exception.pojo.DAO.AuthoritiesDAOException;
 import com.toostew.noteShare.exception.pojo.service.AuthoritiesServiceException;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,20 @@ public class AuthoritiesService {
 
     public AuthoritiesService(AuthoritiesDAO authoritiesDAO) {
         this.authoritiesDAO = authoritiesDAO;
+    }
+
+
+
+    public Authorities buildAuthorities(String role, User user) throws AuthoritiesServiceException {
+        Authorities authorities = new Authorities();
+        authorities.setAuthority(role);
+        authorities.setUser(user);
+
+        return authorities;
+    }
+
+    public void createAuthorities(Authorities authorities) throws AuthoritiesDAOException {
+        authoritiesDAO.createAuthorities(authorities);
     }
 
     public Authorities getAuthoritiesById(int id) {
