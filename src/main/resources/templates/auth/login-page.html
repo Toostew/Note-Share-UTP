@@ -91,6 +91,11 @@ spring will look for it in resources/static-->
                 </form>
             </div>
 
+            <div sec:authorize="!isAuthenticated()" class="flex items-center gap-1 text-base mt-1">
+                <span>Don’t have an account?</span>
+                <a th:href="@{/register}" class="text-sky-600 hover:underline cursor-pointer">Create one!</a>
+            </div>
+
             <div th:if="${param.logout}">
                 <p class="text-green-500 font-bold">You have been logged out!</p>
             </div>

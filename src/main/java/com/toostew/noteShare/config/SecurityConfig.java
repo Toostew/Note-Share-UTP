@@ -20,9 +20,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/upload").hasAnyRole("USER")
-                                .requestMatchers("/fileReceived").hasAnyRole("USER")
-                                .anyRequest().permitAll()
+                                //specifically /upload and /fileReceived is blocked to registered users
+                                .requestMatchers("/upload").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/fileReceived").hasAnyRole("USER","ADMIN")
+                                .anyRequest().permitAll() //every other page can be freely accessed
                                 )
                 .formLogin(formLogin ->
                         formLogin.loginPage("/login")
