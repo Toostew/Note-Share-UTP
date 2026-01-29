@@ -4,6 +4,7 @@ import com.toostew.noteShare.exception.pojo.DAO.UserDAOException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import com.toostew.noteShare.entity.User;
 
@@ -20,6 +21,11 @@ public class UserDAO {
 
 
     //Create
+    //TODO: in the future, instead of trying to catch everything, just append throws to the method
+    @Transactional
+    public void createUser(User user) throws UserDAOException {
+        em.persist(user);
+    }
 
     //Read
     public User getUserById(int id){

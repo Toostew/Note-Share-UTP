@@ -18,6 +18,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     //mapped by "user", which is the name of the field in Authorities
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Authorities> authoritiesList = new ArrayList<>();
@@ -45,6 +48,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public List<Authorities> getAuthoritiesList() {

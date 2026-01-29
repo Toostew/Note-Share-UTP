@@ -17,6 +17,13 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
+
+    //create
+    public void createUser(User user) throws UserServiceException {
+        userDAO.createUser(user);
+    }
+
+
     public User getUserById(int id) {
         try{
             return userDAO.getUserById(id);

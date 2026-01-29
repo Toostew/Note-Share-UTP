@@ -7,6 +7,7 @@ import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
 import com.toostew.noteShare.exception.pojo.service.FileServiceException;
 import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.*;
+import com.toostew.noteShare.service.auth.RegistrationService;
 import com.toostew.noteShare.service.auth.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -35,14 +36,16 @@ public class PageController {
     private StatisticsService statisticsService;
     private CourseService courseService;
     private UserService userService;
+    private RegistrationService registrationService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService,  RegistrationService registrationService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
         this.statisticsService = statisticsService;
         this.courseService = courseService;
         this.userService = userService;
+        this.registrationService = registrationService;
     }
 
     @GetMapping("/")
@@ -57,7 +60,40 @@ public class PageController {
     }
 
 
+    //registration
+    @GetMapping("/register")
+    public String register(){
+        return "/auth/register";
+    }
 
+    @PostMapping("/process-registration")
+    public String processRegistration(@RequestParam(name = "username") String username,
+                                      @RequestParam(name = "password") String password,
+                                      @RequestParam(name = "confirmpassword") String confirmPassword,
+                                      Model model,
+                                      RedirectAttributes redirectAttributes){
+        //process registration, expect registration form data as parameters
+        //TODO: redirect to login and prefill the form with registration data OR automatically login user after sign up
+
+        if(username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
+            redirectAttributes.addFlashAttribute("problem", "Please fill all the fields");
+            return "redirect:/register";
+        }
+        else if (registrationService.usernameExists(username)){
+            redirectAttributes.addFlashAttribute("problem", "That username already exists!");
+            return "redirect:/register";
+        }
+        else if (!confirmPassword.equals(password)){
+            redirectAttributes.addFlashAttribute("problem", "Passwords do not match!");
+            return  "redirect:/register";
+        }
+
+        //if no issues we can make the new User
+        registrationService.registerNewUser(username, password);
+
+
+        return "redirect:/login";
+    }
 
 
     @GetMapping("/upload")
@@ -70,6 +106,9 @@ public class PageController {
     }
 
     //Physically looks for a parameter called file, hence, the form input name must be called file as well.
+    /*TODO: alot of the setup for fetching is done right inside the controller. Should shift it so that it is done
+            in a service that accepts parameters. Should make it easier on account of the abstraction
+     */
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file,
                                @RequestParam(name = "courseId") int courseId,
