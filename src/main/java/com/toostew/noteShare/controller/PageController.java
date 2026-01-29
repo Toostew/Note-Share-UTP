@@ -57,11 +57,7 @@ public class PageController {
     }
 
 
-    @GetMapping("/check")
-    public String check(Authentication authentication) {
-        // If successful, this will print your username
-        return "Logged in as: " + authentication.getName();
-    }
+
 
 
     @GetMapping("/upload")

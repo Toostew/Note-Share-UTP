@@ -30,6 +30,9 @@ public class UserDAO {
         }
 
     }
+
+    //by default, if we use em.find(), it will use the associated PK
+    //we can however create our own queries
     public User getUserByUsername(String username) {
         try {
             return em.createQuery("SELECT u FROM User u WHERE u.username = :user", User.class)
@@ -38,6 +41,7 @@ public class UserDAO {
         } catch (NoResultException e) {
             // em.find returns null if not found,
             // but getSingleResult throws an exception if not found.
+            // TODO: at the current moment, i dont know how to separate wrong passwords with wrong usernames
             throw new UserDAOException("Issue in UserDAO, Username not found!", e);
         } catch (Exception e) {
             throw new UserDAOException("Issue in UserDAO, Database error", e);

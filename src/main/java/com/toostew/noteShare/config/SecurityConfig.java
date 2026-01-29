@@ -19,7 +19,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.anyRequest().authenticated())
+                        authorizeRequests
+                                .requestMatchers("/upload").hasAnyRole("USER")
+                                .requestMatchers("/fileReceived").hasAnyRole("USER")
+                                .anyRequest().permitAll()
+                                )
                 .formLogin(formLogin ->
                         formLogin.loginPage("/login")
                                 .loginProcessingUrl("/authenticate-user")

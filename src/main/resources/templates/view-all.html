@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>UTP Note Share</title>
@@ -9,12 +9,35 @@
 <body class="min-h-screen bg-gray-200">
 <header class="h-20 bg-sky-800 border-b flex items-center px-6">
 
-    <div class="items-center flex-column">
-        <h1 class=" font-sans text-2xl tracking-tighter text-left text-white">UTP Note Share</h1>
-        <div class="flex gap-0.5">
-            <h1 class=" font-sans text-xs tracking-tighter text-white">Project by</h1>
-            <a class=" font-sans text-xs tracking-tighter text-white hover:text-sky-400" href="https://github.com/Toostew" target="_blank">Toostew</a>
+    <div class="flex justify-between w-full px-4 py-2">
+        <div id="nameplate" class="flex flex-col justify-center">
+            <h1 class="font-sans text-2xl tracking-tighter text-white">UTP Note Share</h1>
+            <div class="flex gap-1">
+                <h1 class="font-sans text-xs tracking-tighter text-white">Project by</h1>
+                <a class="font-sans text-xs tracking-tighter text-white hover:text-sky-400"
+                   href="https://github.com/Toostew" target="_blank">Toostew</a>
+            </div>
         </div>
+
+        <a id="loginandsignout"
+           class="flex items-center gap-2 rounded-md bg-gray-200 px-3 py-0.5 hover:bg-gray-400 transition-all cursor-pointer"
+           th:href="@{/login}">
+            <!--sec:authorize to check if user is authenticated or not. If not, show login. If yes, show username-->
+            <span sec:authorize="!isAuthenticated()"
+                  class="text-sm leading-none ">
+                    login / sign up
+            </span>
+
+            <span sec:authorize="isAuthenticated()"
+                  class="text-sm leading-none">
+                    <span sec:authentication="name"></span>
+            </span>
+            <div id="pfp" class="w-6 h-6 flex-shrink-0">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
+                     id="profilePic"
+                     class="object-cover w-full h-full rounded-full border border-gray-300">
+            </div>
+        </a>
     </div>
 
 </header>
