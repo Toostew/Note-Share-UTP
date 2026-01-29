@@ -56,14 +56,14 @@ public class PageController {
 
     @GetMapping("/login")
     public String login(){
-        return "/auth/login-page";
+        return "auth/login-page";
     }
 
 
     //registration
     @GetMapping("/register")
     public String register(){
-        return "/auth/register";
+        return "auth/register";
     }
 
     @PostMapping("/process-registration")
