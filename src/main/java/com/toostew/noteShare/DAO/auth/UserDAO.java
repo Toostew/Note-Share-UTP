@@ -54,6 +54,18 @@ public class UserDAO {
         }
     }
 
+    public User getUserByEmail(String email) {
+        try{
+            return em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new UserDAOException("Issue in UserDAO, Email not found!", e);
+        } catch (Exception e) {
+            throw new UserDAOException("Issue in UserDAO, unknown error", e);
+        }
+    }
+
 
     //update
 

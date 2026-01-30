@@ -21,6 +21,9 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "email")
+    private String email;
+
     //mapped by "user", which is the name of the field in Authorities
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Authorities> authoritiesList = new ArrayList<>();
@@ -56,6 +59,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Authorities> getAuthoritiesList() {

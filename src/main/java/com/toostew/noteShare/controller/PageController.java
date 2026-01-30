@@ -68,6 +68,7 @@ public class PageController {
 
     @PostMapping("/process-registration")
     public String processRegistration(@RequestParam(name = "username") String username,
+                                      @RequestParam(name = "email") String email,
                                       @RequestParam(name = "password") String password,
                                       @RequestParam(name = "confirmpassword") String confirmPassword,
                                       Model model,
@@ -75,7 +76,7 @@ public class PageController {
         //process registration, expect registration form data as parameters
         //TODO: redirect to login and prefill the form with registration data OR automatically login user after sign up
 
-        if(username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
+        if(username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()){
             redirectAttributes.addFlashAttribute("problem", "Please fill all the fields");
             return "redirect:/register";
         }
@@ -87,9 +88,17 @@ public class PageController {
             redirectAttributes.addFlashAttribute("problem", "Passwords do not match!");
             return  "redirect:/register";
         }
+        else if (registrationService.emailExists(email)){
+            redirectAttributes.addFlashAttribute("problem", "That Student email already exists!");
+            return  "redirect:/register";
+        }
 
         //if no issues we can make the new User
-        registrationService.registerNewUser(username, password);
+        registrationService.registerNewUser(username, password, email);
+
+        //return the user to the login page with the credentials automatically filled in
+        redirectAttributes.addFlashAttribute("Ucredential", username);
+        redirectAttributes.addFlashAttribute("Pcredential", password);
 
 
         return "redirect:/login";

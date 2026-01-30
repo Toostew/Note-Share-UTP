@@ -3,6 +3,10 @@ package com.toostew.noteShare.service.auth;
 import com.toostew.noteShare.entity.Authorities;
 import com.toostew.noteShare.entity.User;
 import com.toostew.noteShare.exception.pojo.service.UserServiceException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.lang.Character;
@@ -20,7 +24,7 @@ public class RegistrationService {
     }
 
 
-    public void registerNewUser(String username, String password){
+    public void registerNewUser(String username, String password, String email) {
         //username and password check occurs outside of this method
         //method assumes the username and password are both valid
 
@@ -30,6 +34,7 @@ public class RegistrationService {
         user.setUsername(username);
         user.setPassword(password); //TODO: passwords are currently unencrypted, add bcrypt!
         user.setEnabled(true);
+        user.setEmail(email);
 
 
         System.out.println("Registering New User: " + username + " " + password + "without authorities");
@@ -41,6 +46,11 @@ public class RegistrationService {
         //create authorities, hardcode USER rank inside
         Authorities authorities = authoritiesService.buildAuthorities("USER", temp);
         authoritiesService.createAuthorities(authorities); //persist authorities into the database
+
+
+
+
+
     }
 
 
@@ -56,6 +66,17 @@ public class RegistrationService {
         return true;
 
     }
+
+    public boolean emailExists(String email) {
+        try{
+            User user = userService.getUserByEmail(email);
+            //if a user is returned we know that the user/email exists
+            return true;
+        } catch(UserServiceException ex){
+            return false; //if an error occurs we know that the email must not exist
+        }
+    }
+
     public boolean validPassword(String password){
         //entered password should follow convention
         int capitalLetters = 0;

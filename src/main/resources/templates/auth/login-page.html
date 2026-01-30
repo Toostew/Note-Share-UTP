@@ -73,8 +73,8 @@ spring will look for it in resources/static-->
         <div class="flex flex-col max-w-4xl mt-10 p-6 bg-white rounded-2xl shadow-md space-y-4">
 
             <form th:action="@{/authenticate-user}" method="post" class="max-w-full space-y-4">
-                <input class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="text" id="username" name="username" placeholder="Username">
-                <input class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="password" id="password" name="password" placeholder="Password">
+                <input th:value="${Ucredential}" class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="text" id="username" name="username" placeholder="Username" required>
+                <input th:value="${Pcredential}" class="block w-full text-lg rounded-md bg-gray-200 text-gray-700 p-2" type="password" id="password" name="password" placeholder="Password" required>
 
                 <div class="flex flex-row gap-4">
                     <button type="submit" class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">

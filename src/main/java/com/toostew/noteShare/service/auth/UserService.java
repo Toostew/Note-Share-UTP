@@ -41,6 +41,15 @@ public class UserService {
         }
     }
 
+    public User getUserByEmail(String email) {
+        try{
+            return userDAO.getUserByEmail(email);
+        } catch(UserDAOException e){
+            throw new UserServiceException("Issue in User Service,Could not get User by Email", e);
+        }
+
+    }
+
 
 
 }
