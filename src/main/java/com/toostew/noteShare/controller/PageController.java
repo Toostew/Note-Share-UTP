@@ -191,10 +191,12 @@ public class PageController {
     }
 
     //list every single object in "islands"
+    //only files that have viewable == 1
     @GetMapping("/view-all")
     public String view(Model model){
         //for now we want to just view all of the items so -1
-        List<File_records> list = fileService.getNumFile_Records(-1);
+        List<File_records> temp = fileService.getNumFile_Records(-1);
+        List<File_records> list = fileService.filterOnlyViewableRecords(temp);
         model.addAttribute("ObjectList", list);
         return "view-all";
     }
@@ -211,7 +213,10 @@ public class PageController {
     @GetMapping("/view-category/{courseId}")
     public String view_category(@PathVariable("courseId") int courseId, Model model){
 
-        model.addAttribute("fileRecordsInCourse", courseService.getFile_recordsList(courseId));
+        List<File_records> temp = courseService.getFile_recordsList(courseId);
+        List<File_records> filteredList = fileService.filterOnlyViewableRecords(temp);
+
+        model.addAttribute("fileRecordsInCourse", filteredList);
         model.addAttribute("course", courseService.getCourse(courseId)); //attribute: Associated course
 
         return "view-category-withID";

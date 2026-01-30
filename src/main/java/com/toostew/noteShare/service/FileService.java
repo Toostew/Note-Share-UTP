@@ -8,6 +8,7 @@ import com.toostew.noteShare.exception.pojo.service.StatisticsServiceException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,20 @@ public class FileService {
         return uuid.toString()+"-"+now.toString();
     }
 
+    //receive file_records list, output list where viewable == 1
+    //this is a separate service since there are already so many implementation for listing file_records
+    //reimplementing this would take a long ass time
+    //TODO: reimplement so as to not make this a 2 step process by default, abstract it
+    public List<File_records> filterOnlyViewableRecords(List<File_records> file_recordsList){
+        var resultList = new ArrayList<File_records>();
+        for(File_records file_records : file_recordsList){
+            if(file_records.getViewable()){
+                resultList.add(file_records); //add the file_records if it is viewable
+            }
+        }
 
+        return resultList;
+    }
 
     //create
     public void createFile_record(File_records file_records){

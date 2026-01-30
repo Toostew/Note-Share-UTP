@@ -38,6 +38,9 @@ public class File_records {
     @Column(name = "date_created")
     private LocalDate date_created;
 
+    @Column(name = "viewable")
+    private boolean viewable;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
@@ -106,6 +109,14 @@ public class File_records {
 
     public void setDate_created(LocalDate date_created) {
         this.date_created = date_created;
+    }
+
+    public boolean getViewable() {
+        return viewable;
+    }
+
+    public void setViewable(boolean viewable) {
+        this.viewable = viewable;
     }
 
     public Course getCourse() {return course;}

@@ -6,6 +6,7 @@ import com.toostew.noteShare.exception.pojo.DAO.File_recordsDAOException;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -75,4 +76,6 @@ public class File_recordsFileDAOImpl implements FileDAOInterface {
         }
 
     }
+
+
 }
