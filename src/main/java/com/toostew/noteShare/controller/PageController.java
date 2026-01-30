@@ -220,6 +220,7 @@ public class PageController {
     }
 
 
+    //render specific file
     @GetMapping("/view/{id}")
     public String viewWithId(@PathVariable int id, Model model){
         try {
@@ -230,6 +231,22 @@ public class PageController {
         } catch(FileServiceException e){
             throw new PageControllerException("Issue in PageController, Couldn't retrieve file metadata from database",e);
         }
+    }
+
+    @GetMapping("/file/preview/{id}")
+    public ResponseEntity<Resource> preview(@PathVariable int id, Model model) throws PageControllerException{
+        File_records temp = fileService.getFile_recordById(id);
+        String bucket = temp.getStorage_path();
+        String key = temp.getStored_name();
+        Resource payload =  r2Service.getObjectWithBucketAndKey(temp.getStorage_path(),temp.getStored_name()).getBody();
+
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(temp.getContent_type()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + temp.getOriginal_name() + "\"")
+                .body(payload);
+
     }
 
 

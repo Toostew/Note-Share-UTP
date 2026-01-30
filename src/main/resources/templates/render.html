@@ -68,10 +68,27 @@
             <h1 class="text-base font-mono tracking-tight" th:text="${file_record.id}"></h1>
         </div>
 
-        <img th:src="@{/render/{id}(id=${file_record.id})}" class="object-contain w-full h-full">
-        <a th:href="@{/download/{id}(id=${file_record.id})}" class="block text-center leading-10 text-base text-white w-40 h-10 bg-blue-600 hover:bg-blue-700 rounded-md shadow-md transition">
-            Download
-        </a>
+        <!--display this if the file is an image-->
+        <div th:if="${file_record.content_type != null and #strings.startsWith(file_record.content_type, 'image/')}">
+            <img th:src="@{/render/{id}(id=${file_record.id})}" class="object-contain w-full h-full">
+            <a th:href="@{/download/{id}(id=${file_record.id})}" class="block text-center leading-10 text-base text-white w-40 h-10 bg-blue-600 hover:bg-blue-700 rounded-md shadow-md transition">
+                Download
+            </a>
+        </div>
+
+        <!--display this if the file is a PDF-->
+        <div th:if="${file_record.content_type != null and #strings.equals(file_record.content_type, 'application/pdf')}">
+            <iframe th:src="@{/file/preview/{id}(id=${file_record.id})}" class="w-full h-full"></iframe>
+            <div class="flex flex-row space-x-1">
+                <a th:href="@{/download/{id}(id=${file_record.id})}" class="block text-center leading-10 text-base text-white w-40 h-10 bg-blue-600 hover:bg-blue-700 rounded-md shadow-md transition">
+                    Download
+                </a>
+                <a th:href="@{/file/preview/{id}(id=${file_record.id})}" target="_blank" class="block text-center leading-10 text-base text-white w-40 h-10 bg-blue-600 hover:bg-blue-700 rounded-md shadow-md transition">
+                    View
+                </a>
+            </div>
+
+        </div>
 
     </main>
 </div>
