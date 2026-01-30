@@ -169,6 +169,7 @@ public class PageController {
         temp.setUser(user); //set owner
         temp.setCourse(courseService.getCourse(courseId)); //set course by selection
         temp.setDate_created(date_created);
+        temp.setViewable(false);
 
         //convertMultipartFile into inputStream
         try{

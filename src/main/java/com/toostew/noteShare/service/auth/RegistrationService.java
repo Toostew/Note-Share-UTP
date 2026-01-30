@@ -44,7 +44,7 @@ public class RegistrationService {
         User temp = userService.getUserByUsername(username);
 
         //create authorities, hardcode USER rank inside
-        Authorities authorities = authoritiesService.buildAuthorities("USER", temp);
+        Authorities authorities = authoritiesService.buildAuthorities("ROLE_USER", temp);
         authoritiesService.createAuthorities(authorities); //persist authorities into the database
 
 
