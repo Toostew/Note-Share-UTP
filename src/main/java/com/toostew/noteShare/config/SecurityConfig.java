@@ -23,7 +23,7 @@ public class SecurityConfig {
                                 //specifically /upload and /fileReceived is blocked to registered users
                                 .requestMatchers("/upload").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/fileReceived").hasAnyRole("USER","ADMIN")
-                                .requestMatchers("/file-verify").hasAnyRole("ADMIN")
+                                .requestMatchers("/file-verify/**").hasAnyRole("ADMIN") //all file-verify pages are admin only
                                 .anyRequest().permitAll() //every other page can be freely accessed
                                 )
                 .formLogin(formLogin ->
