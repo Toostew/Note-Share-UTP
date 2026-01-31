@@ -12,6 +12,8 @@ public interface FileDAOInterface {
 
     List<File_records> getFile_records(int num);
 
+    void updateFile_records(File_records file_records);
+
     void deleteFile_recordById(int id);
 
 

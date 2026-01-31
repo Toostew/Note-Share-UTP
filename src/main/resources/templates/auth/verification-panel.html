@@ -24,8 +24,8 @@ spring will look for it in resources/static-->
         </div>
 
         <a id="loginandsignout"
-             class="flex items-center gap-2 rounded-md bg-gray-200 px-3 py-0.5 hover:bg-gray-400 transition-all cursor-pointer"
-            th:href="@{/login}">
+           class="flex items-center gap-2 rounded-md bg-gray-200 px-3 py-0.5 hover:bg-gray-400 transition-all cursor-pointer"
+           th:href="@{/login}">
             <!--sec:authorize to check if user is authenticated or not. If not, show login. If yes, show username-->
             <span sec:authorize="!isAuthenticated()"
                   class="text-sm leading-none ">
@@ -49,7 +49,7 @@ spring will look for it in resources/static-->
 
 <div class="flex">
     <aside class="w-40 bg-white border-r min-h-screen p-1 flex flex-col gap-0.5">
-        <a class="w-full h-20 border p-2 bg-gray-200 font-mono text-lg">
+        <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/}">
             <p>Main Menu</p>
         </a>
         <a class="w-full h-20 border p-2 hover:bg-gray-200 transition font-mono text-lg" th:href="@{/view-categories}">
@@ -66,33 +66,35 @@ spring will look for it in resources/static-->
 
     <main class="flex-1 p-4 space-y-4 max-w-4xl w-full">
         <h1 class="text-3xl font-mono tracking-tight">
-            Welcome to UTP Note Share!
+            Da Secret admin panel
         </h1>
 
-        <h1 class="text-base font-mono tracking-tighter">
-            This service allows you to upload and view images, PDFs, Files and Documents related to your course. All materials are
-            provided by fellow students and everyone is welcome to contribute!
-        </h1>
-        <h1 class="text-base font-mono tracking-tighter">
-            Click on the <span class="text-sky-600">View</span>
-            tab on the left panel to access files already uploaded. You can sort by course, date, file type and more.
-        </h1>
-        <h1 class="text-base font-mono tracking-tighter">
-            Click on the <span class="text-sky-600">Upload</span>
-            tab to upload files to the service. Supported file types include Images (JPEG, PNG), and PDFs.
-            Files must not exceed 25 MB. Duplicate files are technically able to be uploaded although this is not recommended,
-            and files that are found to be exact copies will be purged at any time. More File types, bigger uploads and
-            multiple upload support will come soon!
-        </h1>
-        <h1 class="text-base font-mono tracking-tighter">
-            Click on the <span class="text-sky-600">Statistics</span>
-            tab to view statistics about the service. We track the number of transactions, database queries (lookups/ CRUD operations)
-            as well as total data egress volume.
-        </h1>
-        <h1 class="text-base font-mono tracking-tighter" sec:authorize="hasAnyRole('ADMIN')">
-            For admins, click <a class="text-sky-600 hover:underline" th:href="@{/file-verify}">HERE</a>
-            to access the admin panel to approve or delete files. NOTE: I really have to fuckin automate this
-        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div th:each="fileRecord : ${filteredList}">
+                <a th:href="@{/view/{id}(id=${fileRecord.id})}" >
+                    <div class="flex-1 flex p-1 aspect-square overflow-hidden">
+                        <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
+                    </div>
+                    <div class="w-full h-full p-2 gap-1 overflow-hidden">
+                        <p  class="text-base " th:text="${fileRecord.original_name}"></p>
+
+                        <p th:text="'Id: ' + ${fileRecord.id}"></p>
+                        <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
+                        <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
+                    </div>
+                    <div class="flex flex-row space-x-1">
+                        <form th:action="@{/file-verify/process/delete}" method="post">
+                            <input type="hidden" name="delete" th:value="${fileRecord.id}">
+                            <button type="submit" class="text-white rounded-md bg-red-600 p-4">Delete</button>
+                        </form>
+                        <form th:action="@{/file-verify/process/accept}" method="post">
+                            <input type="hidden" name="accept" th:value="${fileRecord.id}">
+                            <button type="submit" class="text-white rounded-md bg-blue-500 p-4">Accept</button>
+                        </form>
+                    </div>
+                </a>
+            </div>
+        </div>
     </main>
 </div>
 </body>

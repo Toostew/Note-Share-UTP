@@ -67,6 +67,24 @@ public class File_recordsFileDAOImpl implements FileDAOInterface {
 
     @Override
     @Transactional
+    public void updateFile_records(File_records file_records) {
+        try{
+            File_records temp  = getFile_recordById(file_records.getId());
+            temp.setViewable(file_records.getViewable());
+            temp.setOriginal_name(file_records.getOriginal_name());
+            //for now, viewable and original name can be altered
+            entityManager.merge(temp);
+        } catch(EntityExistsException e){
+            throw new File_recordsDAOException("Issue at File_recordsDAO, Entry does not exist!",e);
+        } catch(IllegalArgumentException e){
+            throw new File_recordsDAOException("Issue at File_recordsDAO, bad arguments!",e);
+        }
+
+
+    }
+
+    @Override
+    @Transactional
     public void deleteFile_recordById(int id) {
         try{
             File_records temp =  entityManager.find(File_records.class, id);

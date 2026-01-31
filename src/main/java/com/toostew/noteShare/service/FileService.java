@@ -51,6 +51,17 @@ public class FileService {
         return resultList;
     }
 
+    //filter only by non-viewable
+    public List<File_records> filterOnlyNonViewableRecords(List<File_records> file_recordsList){
+        var resultList = new ArrayList<File_records>();
+        for(File_records file_records : file_recordsList){
+            if(!file_records.getViewable()){
+                resultList.add(file_records); //add the file_records strictly if not viewable
+            }
+        }
+        return resultList;
+    }
+
     //create
     public void createFile_record(File_records file_records){
         try{
@@ -89,6 +100,13 @@ public class FileService {
     }
 
     //update
+    public void updateFile_record(File_records file_records){
+        try{
+            dao.updateFile_records(file_records);
+        } catch (File_recordsDAOException e){
+            throw new FileServiceException("Issue at FileService, Could not update file_records",e);
+        }
+    }
 
     //delete
     public void deleteFile_record(int id){

@@ -23,6 +23,7 @@ public class SecurityConfig {
                                 //specifically /upload and /fileReceived is blocked to registered users
                                 .requestMatchers("/upload").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/fileReceived").hasAnyRole("USER","ADMIN")
+                                .requestMatchers("/file-verify").hasAnyRole("ADMIN")
                                 .anyRequest().permitAll() //every other page can be freely accessed
                                 )
                 .formLogin(formLogin ->
@@ -30,6 +31,8 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/authenticate-user")
                                 .permitAll()
                                 .defaultSuccessUrl("/", true))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied"))
                 .logout(logout ->logout.permitAll()
 
 

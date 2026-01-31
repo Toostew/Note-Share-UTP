@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.extras.springsecurity6.auth.Authorization;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
@@ -104,6 +105,52 @@ public class PageController {
         return "redirect:/login";
     }
 
+    //mapping for file verification, admin only
+    @GetMapping("/file-verify")
+    public String fileVerify(Authentication authentication, Model model){
+
+        List<File_records> file_recordsList = fileService.getNumFile_Records(-1);
+        List<File_records> resultList = fileService.filterOnlyNonViewableRecords(file_recordsList);
+        model.addAttribute("filteredList", resultList);
+
+        return "auth/verification-panel";
+    }
+
+    @PostMapping("/file-verify/process/accept")
+    public String fileVerifyAcceptProcess(@RequestParam(name = "accept") int id,Authentication authentication, Model model){
+        File_records temp = fileService.getFile_recordById(id);
+        temp.setViewable(true);
+        fileService.updateFile_record(temp);
+
+        return "redirect:/file-verify";
+    }
+
+    @PostMapping("/file-verify/process/delete")
+    public String fileVerifyDeleteProcess(@RequestParam(name = "delete") int id,Authentication authentication, Model model){
+        //delete record and associated object
+        try{
+            File_records temp = fileService.getFile_recordById(id);
+            r2Service.deleteObjectWithBucketAndKey(temp.getStorage_path(), temp.getStored_name());
+            fileService.deleteFile_record(temp.getId());
+            return "redirect:/file-verify";
+        } catch(R2ServiceException e){
+            throw new PageControllerException("Issue in Page Controller, could not delete file",e);
+        } catch(FileServiceException e){
+            throw new  PageControllerException("Issue in Page Controller, could not delete file",e);
+        } catch (Exception e){
+            throw new  PageControllerException("Issue in Page Controller, could not delete file",e);
+        }
+
+    }
+
+    @GetMapping("/access-denied")
+    public String accessDenied(Authentication authentication, Model model){
+        System.out.println("Attempted access to denied resources");
+        System.out.println("User: " +  authentication.getPrincipal());
+        System.out.println("Details: " +  authentication.getDetails());
+        System.out.println("Authority: " +  authentication.getAuthorities());
+        return "auth/access-denied";
+    }
 
     @GetMapping("/upload")
     public String test(Model model){
@@ -152,9 +199,6 @@ public class PageController {
 
         //create user
         User user =  userService.getUserByUsername(authentication.getName());
-
-
-
 
 
 
