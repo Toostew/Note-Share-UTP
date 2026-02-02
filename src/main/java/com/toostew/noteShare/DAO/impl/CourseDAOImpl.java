@@ -76,7 +76,6 @@ public class CourseDAOImpl implements CourseDAOInterface {
 
 
     //File_record handling
-    //with
     @Override
     public List<File_records> getFileRecordsList(int courseId) {
         try{

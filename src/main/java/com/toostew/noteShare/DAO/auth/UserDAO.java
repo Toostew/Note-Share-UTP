@@ -68,7 +68,41 @@ public class UserDAO {
 
 
     //update
+    public void updateUser(User  user) {
+        try{
+            User temp =  em.find(User.class, user.getId());
+            temp.setUsername(user.getUsername());
+            temp.setEmail(user.getEmail());
+            temp.setPassword(user.getPassword());
+            em.merge(temp);
+        } catch (EntityNotFoundException e) {
+            throw new UserDAOException("Issue in UserDAO, User not found!", e);
+        } catch (Exception e) {
+            throw new UserDAOException("Issue in UserDAO, Unknown issue", e);
+        }
+    }
 
     //delete
-
+    //remove using provided user
+    public void deleteUser(User user) {
+        try{
+            User temp =  em.find(User.class, user.getId());
+            em.remove(temp);
+        } catch (EntityNotFoundException e) {
+            throw new UserDAOException("Issue in UserDAO, User not found!", e);
+        } catch (Exception e) {
+            throw new UserDAOException("Issue in UserDAO, Unknown issue", e);
+        }
+    }
+    //remove using provided ID
+    public void deleteUserWithId(int id){
+        try{
+            User temp =  em.find(User.class, id);
+            em.remove(temp);
+        } catch (EntityNotFoundException e) {
+            throw new UserDAOException("Issue in UserDAO, User not found!", e);
+        } catch (Exception e) {
+            throw new UserDAOException("Issue in UserDAO, Unknown issue", e);
+        }
+    }
 }

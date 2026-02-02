@@ -66,7 +66,7 @@ public class FileService {
     public void createFile_record(File_records file_records){
         try{
             dao.createFile_records(file_records);
-            statisticsService.incrementDatabaseTrasactions();
+            statisticsService.incrementDatabaseTransactions(1);
         } catch(File_recordsDAOException e){
             throw new FileServiceException("Issue at FileService, issue with creating File_record",e);
         } catch(StatisticsServiceException e){
@@ -78,7 +78,7 @@ public class FileService {
     //read
     public File_records getFile_recordById(int id){
         try{
-            statisticsService.incrementDatabaseTrasactions();
+            statisticsService.incrementDatabaseTransactions(1);
             return dao.getFile_recordById(id);
         } catch(File_recordsDAOException e){
             throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
@@ -91,6 +91,7 @@ public class FileService {
     //read a certain number of entries. If -1, return all
     public List<File_records> getNumFile_Records(int num){
         try{
+            statisticsService.incrementDatabaseTransactions(num);
             return dao.getFile_records(num);
         } catch(File_recordsDAOException e){
             throw new FileServiceException("Issue at FileService, issue with fetching File_record by id",e);
@@ -112,7 +113,7 @@ public class FileService {
     public void deleteFile_record(int id){
         try{
             dao.deleteFile_recordById(id);
-            statisticsService.incrementDatabaseTrasactions();
+            statisticsService.incrementDatabaseTransactions(1);
         } catch(File_recordsDAOException e){
             throw new FileServiceException("Issue at FileService, issue with deleting File_record by id",e);
         } catch(StatisticsServiceException e){

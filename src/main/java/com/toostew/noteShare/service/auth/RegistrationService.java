@@ -3,6 +3,7 @@ package com.toostew.noteShare.service.auth;
 import com.toostew.noteShare.entity.Authorities;
 import com.toostew.noteShare.entity.User;
 import com.toostew.noteShare.exception.pojo.service.UserServiceException;
+import com.toostew.noteShare.service.StatisticsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,14 +14,16 @@ import java.lang.Character;
 
 @Service
 public class RegistrationService {
-    private final AuthoritiesService authoritiesService;
+    private AuthoritiesService authoritiesService;
     //this Service is for handling new user registration
 
     private UserService userService;
+    private StatisticsService statisticsService;
 
-    public RegistrationService(UserService userService, AuthoritiesService authoritiesService) {
+    public RegistrationService(UserService userService, AuthoritiesService authoritiesService, StatisticsService statisticsService) {
         this.userService = userService;
         this.authoritiesService = authoritiesService;
+        this.statisticsService = statisticsService;
     }
 
 
@@ -48,13 +51,10 @@ public class RegistrationService {
         authoritiesService.createAuthorities(authorities); //persist authorities into the database
 
 
-
-
-
     }
 
 
-    //TODO: there's probably a better way to implement this without using exceptions
+    //TODO: there's probably a better way to implement this without using exceptions, fuck it
     public boolean usernameExists(String username){
         try{
             User user = userService.getUserByUsername(username);

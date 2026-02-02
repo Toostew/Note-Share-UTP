@@ -23,6 +23,7 @@ public class AuthoritiesDAO {
     //Create
     @Transactional
     public void createAuthorities(Authorities authorities) throws AuthoritiesDAOException {
+        System.out.println("Adding new authority of id: "+authorities.getId());
         em.persist(authorities);
     }
 
@@ -38,7 +39,30 @@ public class AuthoritiesDAO {
     }
 
     //update
+    //can currently only modify authority string
+    public void updateAuthorities(Authorities authorities){
+        try{
+            System.out.println("updating authorities for authority ID: "+authorities.getId());
+            Authorities temp = em.find(Authorities.class, authorities.getId());
+            temp.setAuthority(authorities.getAuthority());
+        } catch(EntityNotFoundException e){
+            throw new  AuthoritiesDAOException("Issue in AuthoritiesDAO, Authorities not found!", e);
+        } catch(Exception e){
+            throw new AuthoritiesDAOException("Issue in AuthoritiesDAO, Unknown error!", e);
+        }
+    }
 
     //delete
-
+    //delete with provided authority
+    public void deleteAuthorities(Authorities authorities){
+        try{
+            System.out.println("Deleteing authorities for authority ID: "+authorities.getId());
+            Authorities temp = em.find(Authorities.class, authorities.getId());
+            em.remove(temp);
+        } catch(EntityNotFoundException e){
+            throw new AuthoritiesDAOException("Issue in AuthoritiesDAO, Authorities not found!", e);
+        } catch(Exception e){
+            throw new AuthoritiesDAOException("Issue in AuthoritiesDAO, Unknown error!", e);
+        }
+    }
 }

@@ -74,12 +74,17 @@ public class StatisticsService {
     }
 
     //increment database transactions
-    public void incrementDatabaseTrasactions(){
+    public void incrementDatabaseTransactions(int value){
         try{
             Statistics temp = dao.getStatistics();
-            temp.setDatabase_transactions(temp.getDatabase_transactions() + 1);
-            dao.updateStatistics(temp);
-            System.out.println("Incremented Database Transactions");
+            if(value <= 0){
+                System.out.println("Issue in Statistics service, can't increment with 0 and below ");
+            } else {
+                temp.setDatabase_transactions(temp.getDatabase_transactions() + value);
+                dao.updateStatistics(temp);
+                System.out.println("Incremented Database Transactions");
+            }
+
         } catch(StatisticsDAOException e){
             throw new StatisticsServiceException("Issue in Statistics service, could not increment database transactions!",e);
         }

@@ -32,9 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new  org.springframework.security.core.userdetails.User(username, user.getPassword(), grantedAuthorities);
 
         } catch (UserServiceException e) {
-            throw new CustomUserDetailsServiceException("Issue in Custome UserDetails Service, couldn't find username", e);
+            throw new CustomUserDetailsServiceException("Issue in Custom UserDetails Service, couldn't find username", e);
         } catch (Exception e) {
-            throw new CustomUserDetailsServiceException("Issue in CUstom UserDetails Service, Unknown error!", e);
+            throw new CustomUserDetailsServiceException("Issue in Custom UserDetails Service, Unknown error!", e);
         }
     }
 
