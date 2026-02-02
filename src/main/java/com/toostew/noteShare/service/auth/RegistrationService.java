@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.lang.Character;
 
@@ -26,16 +27,16 @@ public class RegistrationService {
         this.statisticsService = statisticsService;
     }
 
-
+    //for security reasons user passwords are never seen naked, always hashed using bcrypt
     public void registerNewUser(String username, String password, String email) {
         //username and password check occurs outside of this method
         //method assumes the username and password are both valid
 
         //user is saved into database first, then recaptured to be used to create the authorities
-        password = "{noop}"  + password; //spring security requirement, needs either noop or bcrypt
+        password = bcryptEncodeRawPassword(password);
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password); //TODO: passwords are currently unencrypted, add bcrypt!
+        user.setPassword(password);
         user.setEnabled(true);
         user.setEmail(email);
 
@@ -75,6 +76,14 @@ public class RegistrationService {
         } catch(UserServiceException ex){
             return false; //if an error occurs we know that the email must not exist
         }
+    }
+
+    //encode incoming password into bcrypt with strength 12
+    public String bcryptEncodeRawPassword(String rawPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        String storedPassword = "{bcrypt}" +  encodedPassword;
+        return storedPassword;
     }
 
     public boolean validPassword(String password){
