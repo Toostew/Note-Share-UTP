@@ -108,4 +108,16 @@ public class RegistrationService {
             return false;
         }
     }
+
+    //checks to see if input email is valid
+    public boolean validEmail(String email){
+        //email is valid if it ends with @utp.edu.my
+        //ideally, it should be valid if it follows NAME_STUDENTID@utp.edu.my
+        if(email.endsWith("@utp.edu.my")){
+            //valid, follows convention
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
