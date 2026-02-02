@@ -9,7 +9,7 @@ here are all the things that I need to implement
 7. upgrade frontend to a more suitable UI DONE
 7.5. put admin panel to filter incoming file upload requests (thanks baddie)
 8. better auth with in-database access DONE
-8.5 implement spring MVC validation
+8.5 implement spring MVC validation 
 9. AOP security and logging
 10. google sign in api implementation
 11. change admin panel into automated AI wrapper to scan incoming file upload request (god mode)
