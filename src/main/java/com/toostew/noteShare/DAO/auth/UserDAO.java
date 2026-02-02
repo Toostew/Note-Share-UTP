@@ -68,6 +68,7 @@ public class UserDAO {
 
 
     //update
+    @Transactional
     public void updateUser(User  user) {
         try{
             User temp =  em.find(User.class, user.getId());
@@ -84,6 +85,7 @@ public class UserDAO {
 
     //delete
     //remove using provided user
+    @Transactional
     public void deleteUser(User user) {
         try{
             User temp =  em.find(User.class, user.getId());
@@ -95,6 +97,7 @@ public class UserDAO {
         }
     }
     //remove using provided ID
+    @Transactional
     public void deleteUserWithId(int id){
         try{
             User temp =  em.find(User.class, id);

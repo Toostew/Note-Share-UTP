@@ -40,6 +40,7 @@ public class AuthoritiesDAO {
 
     //update
     //can currently only modify authority string
+    @Transactional
     public void updateAuthorities(Authorities authorities){
         try{
             System.out.println("updating authorities for authority ID: "+authorities.getId());
@@ -54,6 +55,7 @@ public class AuthoritiesDAO {
 
     //delete
     //delete with provided authority
+    @Transactional
     public void deleteAuthorities(Authorities authorities){
         try{
             System.out.println("Deleteing authorities for authority ID: "+authorities.getId());
