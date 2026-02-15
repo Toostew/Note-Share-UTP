@@ -61,17 +61,37 @@ public class CourseDAOImpl implements CourseDAOInterface {
         }
     }
 
+    @Transactional
     @Override
     public void updateCourse(Course course) {
-        //not implemented, currently there is no need to be able to delete or update courses,
-        //can do so directly via workbench
+        //at the moment can only modify course name and category
+        try {
+            Course temp = em.find(Course.class, course.getId());
+            temp.setName(course.getName());
+            temp.setCategory(course.getCategory());
+            em.merge(temp);
+        } catch(EntityNotFoundException e){
+            throw new CourseDAOException("Issue in CourseDAO, Course not found!", e);
+        }  catch(IllegalArgumentException e){
+            throw new CourseDAOException("Issue in CourseDAO, Illegal argument!", e);
+        }
+        System.out.println("updated course of id: " + course.getId());
+
     }
 
     @Transactional
     @Override
     public void deleteCourse(int id) {
-        //not implemented, currently there is no need to be able to delete or update courses from java
-        //can do so via workbench instead
+        try {
+            Course temp = em.find(Course.class, id);
+            em.remove(temp);
+        } catch(EntityNotFoundException e){
+            throw new CourseDAOException("Issue in CourseDAO, Course not found!", e);
+        } catch(IllegalArgumentException e){
+            throw new CourseDAOException("Issue in CourseDAO, Illegal argument!", e);
+        }
+        System.out.println("deleted course of id: " + id);
+
     }
 
 

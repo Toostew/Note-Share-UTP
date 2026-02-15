@@ -52,8 +52,21 @@ public class CourseService {
         }
     }
 
-    //delete and update courses are not implemented as there is currently no need for java to be able to delete or
-    //update courses directly, this can be done using MYSQL workbench
+    public void updateCourse(Course course){
+        try {
+            courseDAO.updateCourse(course);
+        } catch(CourseDAOException e){
+            throw new CourseServiceException("Issue in Course Service, could not update course",e);
+        }
+    }
+
+    public void deleteCourse(int id){
+        try {
+            courseDAO.deleteCourse(id);
+        } catch(CourseDAOException e){
+            throw new CourseServiceException("Issue in Course Service, could not delete course",e);
+        }
+    }
 
 
 }
