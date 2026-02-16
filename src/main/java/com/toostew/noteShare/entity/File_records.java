@@ -1,11 +1,13 @@
 package com.toostew.noteShare.entity;
 
 
+import com.toostew.noteShare.entity.jointable.File_records_tags;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class File_records {
@@ -44,6 +46,10 @@ public class File_records {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToMany(mappedBy = "file_records")
+    Set<File_records_tags> file_records_tags;
+
 
     public File_records() {}
 
@@ -122,6 +128,14 @@ public class File_records {
     public Course getCourse() {return course;}
 
     public void setCourse(Course course) {this.course = course;}
+
+    public Set<File_records_tags> getFile_records_tags() {
+        return file_records_tags;
+    }
+
+    public void setFile_records_tags(Set<File_records_tags> file_records_tags) {
+        this.file_records_tags = file_records_tags;
+    }
 
 
 

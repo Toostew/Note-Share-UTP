@@ -9,6 +9,7 @@ import com.toostew.noteShare.exception.pojo.other.PageControllerException;
 import com.toostew.noteShare.service.*;
 import com.toostew.noteShare.service.auth.RegistrationService;
 import com.toostew.noteShare.service.auth.UserService;
+import com.toostew.noteShare.test.TestService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -38,8 +39,9 @@ public class PageController {
     private CourseService courseService;
     private UserService userService;
     private RegistrationService registrationService;
+    private TestService testService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService,  RegistrationService registrationService) {
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService,  RegistrationService registrationService, TestService testService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -47,6 +49,7 @@ public class PageController {
         this.courseService = courseService;
         this.userService = userService;
         this.registrationService = registrationService;
+        this.testService = testService;
     }
 
     @GetMapping("/")
@@ -375,6 +378,19 @@ public class PageController {
             throw new PageControllerException("Issue in PageController, Issue with Deleting Object with Bucket and Key",e);
         } catch(FileServiceException e){
             throw new PageControllerException("Issue in PageController, Issue with getting file by ID",e);
+        }
+        return "redirect:/";
+    }
+
+
+    @GetMapping("/test")
+    public String test(){
+        int id = 38;
+        System.out.println("Running test with File_record id of: " + id);
+        try {
+            testService.test1(id);
+        } catch (Exception e) {
+            throw new PageControllerException("Issue in PageController, unknown issue",e);
         }
         return "redirect:/";
     }

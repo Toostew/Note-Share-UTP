@@ -1,0 +1,52 @@
+package com.toostew.noteShare.test;
+
+
+import com.toostew.noteShare.DAO.impl.File_recordsFileDAOImpl;
+import com.toostew.noteShare.DAO.impl.File_records_tagsDAO;
+import com.toostew.noteShare.DAO.impl.TagsDAOImpl;
+import com.toostew.noteShare.entity.File_records;
+import com.toostew.noteShare.entity.Tags;
+import com.toostew.noteShare.entity.jointable.File_records_tags;
+import org.springframework.stereotype.Service;
+
+
+
+//this is a developer only service simulator for simulating live transactions
+//controller DI'd this service, so you can use the /test endpoint to simulate requests
+@Service
+public class TestService {
+
+    private File_records_tagsDAO file_records_tagsDAO;
+    private TagsDAOImpl tagsDAO;
+    private File_recordsFileDAOImpl file_recordsFileDAO;
+
+    public TestService(File_records_tagsDAO fileRecordsTagsDAO, TagsDAOImpl tagsDAO, File_recordsFileDAOImpl fileRecordsFileDAO) {
+        this.file_records_tagsDAO = fileRecordsTagsDAO;
+        this.tagsDAO = tagsDAO;
+        this.file_recordsFileDAO = fileRecordsFileDAO;
+    }
+
+    public void test1(int file_records_id){
+
+            System.out.println("1");
+            File_records file_recordsTemp = file_recordsFileDAO.getFile_recordById(file_records_id);
+            File_records_tags file_records_tagsTemp = new  File_records_tags();
+            System.out.println("2");
+
+            //create tag
+            Tags tagsTemp = tagsDAO.getTag(1);
+
+            //create file_records_tags entry
+            file_records_tagsTemp.setTags(tagsTemp);
+            file_records_tagsTemp.setFile_records(file_recordsTemp);
+            System.out.println("3");
+            file_records_tagsDAO.createFile_records_tags(file_records_tagsTemp);
+
+            System.out.println("Success!!");
+
+
+    }
+
+
+
+}
