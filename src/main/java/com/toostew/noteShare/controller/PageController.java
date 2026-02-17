@@ -383,17 +383,7 @@ public class PageController {
     }
 
 
-    @GetMapping("/test")
-    public String test(){
-        int id = 38;
-        System.out.println("Running test with File_record id of: " + id);
-        try {
-            testService.test1(id);
-        } catch (Exception e) {
-            throw new PageControllerException("Issue in PageController, unknown issue",e);
-        }
-        return "redirect:/";
-    }
+
 
 
 

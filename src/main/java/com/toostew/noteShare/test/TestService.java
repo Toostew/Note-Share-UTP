@@ -28,23 +28,7 @@ public class TestService {
 
     public void test1(int file_records_id){
 
-            System.out.println("1");
-            File_records file_recordsTemp = file_recordsFileDAO.getFile_recordById(file_records_id);
-            File_records_tags file_records_tagsTemp = new  File_records_tags();
-            System.out.println("2");
-
-            //create tag
-            Tags tagsTemp = tagsDAO.getTag(1);
-
-            //create file_records_tags entry
-            file_records_tagsTemp.setTags(tagsTemp);
-            file_records_tagsTemp.setFile_records(file_recordsTemp);
-            System.out.println("3");
-            file_records_tagsDAO.createFile_records_tags(file_records_tagsTemp);
-
-            System.out.println("Success!!");
-
-
+        
     }
 
 
