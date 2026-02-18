@@ -50,6 +50,9 @@ public class File_records {
     @OneToMany(mappedBy = "file_records")
     Set<File_records_tags> file_records_tags;
 
+    @OneToMany(mappedBy = "file_records") //the name of the field within the entity that has the FK(many to one) to this entity
+    Set<Thumbnail> thumbnail;
+
 
     public File_records() {}
 
@@ -137,7 +140,13 @@ public class File_records {
         this.file_records_tags = file_records_tags;
     }
 
+    public Set<Thumbnail> getThumbnail() {
+        return thumbnail;
+    }
 
+    public void setThumbnail(Set<Thumbnail> thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     @Override
     public String toString() {
