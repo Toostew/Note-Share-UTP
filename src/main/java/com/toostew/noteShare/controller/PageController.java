@@ -171,6 +171,7 @@ public class PageController {
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file,
                                @RequestParam(name = "courseId") int courseId,
+                               @RequestParam(name = "tags") String tags,
                                Model model,
                                RedirectAttributes redirectAttributes,
                                Authentication authentication){
