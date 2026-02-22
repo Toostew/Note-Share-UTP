@@ -1,10 +1,15 @@
 package com.toostew.noteShare.service;
 
 import com.toostew.noteShare.DAO.impl.TagsDAOImpl;
+import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.entity.Tags;
+import com.toostew.noteShare.entity.jointable.File_records_tags;
 import com.toostew.noteShare.exception.pojo.DAO.TagsDAOException;
 import com.toostew.noteShare.exception.pojo.service.TagServiceException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TagService {
@@ -56,6 +61,40 @@ public class TagService {
         }
     }
 
+    //return all tags of a file_record
+    public List<Tags> getAllTagsFromFile_records(File_records file_records){
+        try{
+            //get a list of every file_records_tags linked to a file_records
+            List<File_records_tags> file_records_tagsList = file_records.getFile_records_tags();
+            List<Tags> tagsList = new ArrayList<Tags>();
+
+            //for each file_records_tags, get the tags
+            for(File_records_tags file_records_tags : file_records_tagsList){
+                tagsList.add(file_records_tags.getTags());
+            }
+
+            return tagsList;
+        } catch(Exception e) {
+            throw new TagServiceException("Issue in Tag Service, couldn't get tags (unknown issue)",e);
+        }
+    }
+
+    //get all associated File_records that share a specified tag
+    public List<File_records> getAllFile_records(Tags tags){
+        try{
+            List<File_records_tags> file_records_tagsList = tags.getFile_records_tags();
+            List<File_records> file_recordsList = new ArrayList<File_records>();
+
+            for(File_records_tags file_records_tags : file_records_tagsList){
+                file_recordsList.add(file_records_tags.getFile_records());
+            }
+
+            return file_recordsList;
+        } catch(Exception e) {
+            throw new TagServiceException("Issue in Tag Service, couldn't get tags (unknown issue)",e);
+        }
+
+    }
 
 
 }

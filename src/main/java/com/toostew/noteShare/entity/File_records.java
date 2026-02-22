@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -48,7 +49,7 @@ public class File_records {
     private Course course;
 
     @OneToMany(mappedBy = "file_records")
-    Set<File_records_tags> file_records_tags;
+    List<File_records_tags> file_records_tags;
 
     @OneToMany(mappedBy = "file_records") //the name of the field within the entity that has the FK(many to one) to this entity
     Set<Thumbnail> thumbnail;
@@ -132,11 +133,11 @@ public class File_records {
 
     public void setCourse(Course course) {this.course = course;}
 
-    public Set<File_records_tags> getFile_records_tags() {
+    public List<File_records_tags> getFile_records_tags() {
         return file_records_tags;
     }
 
-    public void setFile_records_tags(Set<File_records_tags> file_records_tags) {
+    public void setFile_records_tags(List<File_records_tags> file_records_tags) {
         this.file_records_tags = file_records_tags;
     }
 

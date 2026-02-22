@@ -3,6 +3,7 @@ package com.toostew.noteShare.entity;
 import com.toostew.noteShare.entity.jointable.File_records_tags;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +18,7 @@ public class Tags {
     private String tag_name;
 
     @OneToMany(mappedBy = "tags")
-    private Set<File_records_tags> file_records_tags;
+    private List<File_records_tags> file_records_tags;
 
     public int getId() {
         return id;
@@ -35,11 +36,11 @@ public class Tags {
         this.tag_name = tag_name;
     }
 
-    public Set<File_records_tags> getFile_records_tags() {
+    public List<File_records_tags> getFile_records_tags() {
         return file_records_tags;
     }
 
-    public void setFile_records_tags(Set<File_records_tags> file_records_tags) {
+    public void setFile_records_tags(List<File_records_tags> file_records_tags) {
         this.file_records_tags = file_records_tags;
     }
 }

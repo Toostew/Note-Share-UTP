@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class TagsDAOImpl {
 
@@ -51,6 +53,7 @@ public class TagsDAOImpl {
             throw new  TagsDAOException("Issue in TagsDAO, Unknown issue",e);
         }
     }
+
 
     @Transactional
     public void updateTag(Tags tags){
