@@ -46,4 +46,23 @@ public class File_records_tagsService {
         }
     }
 
+    public void updateFile_records_tags(File_records_tags file_records_tags){
+        try {
+            file_records_tagsDAO.updateFile_records_tags(file_records_tags);
+        } catch(File_records_tagsDAOException e){
+            throw new File_records_tagsServiceException("Issue in File_records_tags Service, could not update File record tags", e);
+        }
+    }
+
+    public void deleteFile_records_tags(int File_records_id, int tagsID){
+        try {
+            File_records_tagsEmbeddedKey file_records_tagsEmbeddedKey = new File_records_tagsEmbeddedKey(File_records_id,tagsID);
+            file_records_tagsDAO.deleteFile_records_tags(file_records_tagsEmbeddedKey);
+        } catch(File_records_tagsDAOException e){
+            throw new File_records_tagsServiceException("Issue in File_records_tags Service, could not delete File record tags", e);
+        }
+    }
+
+
+
 }

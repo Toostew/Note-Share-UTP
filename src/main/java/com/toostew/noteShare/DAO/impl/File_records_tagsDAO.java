@@ -62,6 +62,8 @@ public class File_records_tagsDAO {
             em.remove(temp);
         } catch (EntityNotFoundException e) {
             throw new File_records_tagsDAOException("issue in File_records_tagsDAO, Entity doesnt exist",e);
+        } catch (IllegalArgumentException e) {
+            throw new File_records_tagsDAOException("Issue in File_records_tagsDAO, IllegalArgumentException", e);
         } catch (Exception e) {
             throw new File_records_tagsDAOException("issue in File_records_tagsDAO, unknown issue", e);
         }
