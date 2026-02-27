@@ -96,6 +96,43 @@ public class TagService {
 
     }
 
+    public boolean tagExists(String name){
+        return  tagsDAOImpl.tagExists(name);
+    }
+
+    //this method accepts a String which contains a comma delimited list of tag names
+    //it will then upload the tags into the database
+    public List<Tags> createTagListFromString(String tagsInAString) {
+        try {
+            String[] tags = tagsInAString.split(","); // String array of tag names
+
+            //for each tag name, search to see if it already exists
+            //if yes, return that tag. If not, create a new tag
+            List<Tags> tagList = new ArrayList<>();
+
+            for(String tag : tags){
+                if(tagExists(tag)){
+                    Tags tempTag = getTagByName(tag);
+                    tagList.add(tempTag);
+                } else {
+                    //tag doesn't exist, so create it
+                    Tags tempTag = new Tags();
+                    tempTag.setTag_name(tag);
+                    createTag(tempTag); //we upload the tag first, then recapture the tag
+                    Tags tempTag2 = getTagByName(tempTag.getTag_name());
+                    tagList.add(tempTag2);
+                }
+            }
+
+            return tagList;
+        } catch(TagServiceException e) {
+            throw new  TagServiceException("Issue in Tag Service, couldn't get tags",e);
+        } catch(Exception e) {
+            throw new TagServiceException("Issue in Tag Service, couldn't get tags (unknown issue)",e);
+        }
+
+    }
+
 
 
 

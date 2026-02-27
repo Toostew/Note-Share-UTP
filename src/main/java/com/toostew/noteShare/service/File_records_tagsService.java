@@ -10,7 +10,10 @@ import com.toostew.noteShare.exception.pojo.DAO.File_records_tagsDAOException;
 import com.toostew.noteShare.exception.pojo.service.File_records_tagsServiceException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class File_records_tagsService {
@@ -23,7 +26,29 @@ public class File_records_tagsService {
 
 
     //create File_record_tags link accepting existing file_records and tags
-    public void createFile_records_tagsWithTagList(File_records file_records, List<Tags> tags){
+    //NOTE: at the moment Tags is saved in a list which means duplicates need to be filtered here
+    //TODO: change Tagslist to Tags set
+    public void createFile_records_tagsWithTagList(File_records file_records, List<Tags> tagsList){
+
+        //ensure uniqueness by temporarily using a set
+        Set<Tags> tagsSet = new HashSet<Tags>();
+
+        //replant it into a taglist
+        List<Tags> filteredTagsList = new ArrayList<Tags>();
+
+        for (Tags tags: tagsList){
+            tagsSet.add(tags); //duplicates are discarded
+        }
+
+        //for each tag in the set, we create a File_records_tags
+        for(Tags tags: tagsSet){
+            File_records_tags tempFile_records_tags = new File_records_tags();
+
+            tempFile_records_tags.setTags(tags);
+            tempFile_records_tags.setFile_records(file_records);
+            file_records_tagsDAO.createFile_records_tags(tempFile_records_tags);
+        }
+
 
     }
 

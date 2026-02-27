@@ -40,8 +40,13 @@ public class PageController {
     private UserService userService;
     private RegistrationService registrationService;
     private TestService testService;
+    private TagService tagService;
+    private File_records_tagsService file_records_tagsService;
 
-    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,CourseService courseService, UserService userService,  RegistrationService registrationService, TestService testService) {
+
+    public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,
+                          CourseService courseService, UserService userService,  RegistrationService registrationService,
+                          TestService testService, TagService tagService,  File_records_tagsService file_records_tagsService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -50,6 +55,8 @@ public class PageController {
         this.userService = userService;
         this.registrationService = registrationService;
         this.testService = testService;
+        this.tagService = tagService;
+        this.file_records_tagsService = file_records_tagsService;
     }
 
     @GetMapping("/")
@@ -171,7 +178,7 @@ public class PageController {
     @PostMapping("/fileReceived")
     public String fileReceived(@RequestParam(name = "file") MultipartFile file,
                                @RequestParam(name = "courseId") int courseId,
-                               @RequestParam(name = "tags") String tags,
+                               @RequestParam(name = "tags") String tagsListString,
                                Model model,
                                RedirectAttributes redirectAttributes,
                                Authentication authentication){
@@ -219,6 +226,10 @@ public class PageController {
         temp.setDate_created(date_created);
         temp.setViewable(false);
 
+        //parse tags
+        List<Tags> tagsList = tagService.createTagListFromString(tagsListString);
+
+
         //convertMultipartFile into inputStream
         try{
             InputStream inputStream = file.getInputStream();
@@ -234,8 +245,9 @@ public class PageController {
         }
 
         //submission to fileRecords only happens if no exception is returned to prevent false entries
+        //also create file_records_tags
         fileService.createFile_record(temp);
-
+        file_records_tagsService.createFile_records_tagsWithTagList(temp, tagsList);
         return "redirect:/upload";
     }
 

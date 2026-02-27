@@ -54,6 +54,17 @@ public class TagsDAOImpl {
         }
     }
 
+    public boolean tagExists(String name){
+        try{
+            Tags temp =  getTagByName(name);
+        } catch (TagsDAOException e) {
+            //error occured so the tag must not exist
+            return false;
+        }
+        //otherwise, it must already exist, so return true;
+        return true;
+    }
+
 
     @Transactional
     public void updateTag(Tags tags){
