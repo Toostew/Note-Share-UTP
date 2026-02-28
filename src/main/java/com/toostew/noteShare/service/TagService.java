@@ -111,6 +111,7 @@ public class TagService {
             List<Tags> tagList = new ArrayList<>();
 
             for(String tag : tags){
+                tag = tag.toLowerCase().trim();
                 if(tagExists(tag)){
                     Tags tempTag = getTagByName(tag);
                     tagList.add(tempTag);
