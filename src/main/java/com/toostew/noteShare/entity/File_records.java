@@ -1,12 +1,9 @@
 package com.toostew.noteShare.entity;
 
 
-import com.toostew.noteShare.entity.jointable.File_records_tags;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,8 +45,12 @@ public class File_records {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "file_records")
-    List<File_records_tags> file_records_tags;
+    @ManyToMany()
+    @JoinTable(
+            name = "file_records_tags",
+            joinColumns = @JoinColumn(name = "file_records_id"),
+            inverseJoinColumns = @JoinColumn(name = "tags_id"))
+    List<Tags> tags;
 
     @OneToMany(mappedBy = "file_records") //the name of the field within the entity that has the FK(many to one) to this entity
     Set<Thumbnail> thumbnail;
@@ -133,12 +134,12 @@ public class File_records {
 
     public void setCourse(Course course) {this.course = course;}
 
-    public List<File_records_tags> getFile_records_tags() {
-        return file_records_tags;
+    public List<Tags> getTags() {
+        return tags;
     }
 
-    public void setFile_records_tags(List<File_records_tags> file_records_tags) {
-        this.file_records_tags = file_records_tags;
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
     }
 
     public Set<Thumbnail> getThumbnail() {

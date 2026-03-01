@@ -2,7 +2,6 @@ package com.toostew.noteShare.service;
 
 import com.toostew.noteShare.DAO.FileDAOInterface;
 import com.toostew.noteShare.entity.File_records;
-import com.toostew.noteShare.entity.jointable.File_records_tags;
 import com.toostew.noteShare.exception.pojo.service.FileServiceException;
 import com.toostew.noteShare.exception.pojo.DAO.File_recordsDAOException;
 import com.toostew.noteShare.exception.pojo.service.StatisticsServiceException;
@@ -21,7 +20,6 @@ public class FileService {
 
     private FileDAOInterface dao;
     private StatisticsService statisticsService;
-    private File_records_tags file_records_tags;
 
 
 
@@ -112,7 +110,7 @@ public class FileService {
     }
 
     //delete
-
+    //should also cascade delete all associated file_records_tags
     public void deleteFile_record(int id){
         try{
             dao.deleteFile_recordById(id);

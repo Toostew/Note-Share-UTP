@@ -41,12 +41,11 @@ public class PageController {
     private RegistrationService registrationService;
     private TestService testService;
     private TagService tagService;
-    private File_records_tagsService file_records_tagsService;
 
 
     public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,
                           CourseService courseService, UserService userService,  RegistrationService registrationService,
-                          TestService testService, TagService tagService,  File_records_tagsService file_records_tagsService) {
+                          TestService testService, TagService tagService) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -56,7 +55,6 @@ public class PageController {
         this.registrationService = registrationService;
         this.testService = testService;
         this.tagService = tagService;
-        this.file_records_tagsService = file_records_tagsService;
     }
 
     @GetMapping("/")
@@ -226,8 +224,16 @@ public class PageController {
         temp.setDate_created(date_created);
         temp.setViewable(false);
 
-        //parse tags
+
+        //parse tags, create them if they havent existed yet
         List<Tags> tagsList = tagService.createTagListFromString(tagsListString);
+        for(Tags tag : tagsList){
+            tagService.createTag(tag);
+        }
+        temp.setTags(tagsList);
+
+
+
 
 
         //convertMultipartFile into inputStream
@@ -247,7 +253,8 @@ public class PageController {
         //submission to fileRecords only happens if no exception is returned to prevent false entries
         //also create file_records_tags
         fileService.createFile_record(temp);
-        file_records_tagsService.createFile_records_tagsWithTagList(temp, tagsList);
+
+
         return "redirect:/upload";
     }
 
@@ -377,6 +384,8 @@ public class PageController {
         //get the record, and delete it's associated object
 
         try{
+
+
             System.out.println("Attempting to delete file of id: "+id);
             File_records temp = fileService.getFile_recordById(id);
             String bucket = temp.getStorage_path();
@@ -386,6 +395,8 @@ public class PageController {
             //delete File_record
             fileService.deleteFile_record(id);
             System.out.println("deleted File_record of id: "+id);
+
+
 
         } catch(R2ServiceException e){
             throw new PageControllerException("Issue in PageController, Issue with Deleting Object with Bucket and Key",e);

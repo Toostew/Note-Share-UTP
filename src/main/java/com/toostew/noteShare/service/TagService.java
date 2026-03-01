@@ -3,13 +3,14 @@ package com.toostew.noteShare.service;
 import com.toostew.noteShare.DAO.impl.TagsDAOImpl;
 import com.toostew.noteShare.entity.File_records;
 import com.toostew.noteShare.entity.Tags;
-import com.toostew.noteShare.entity.jointable.File_records_tags;
 import com.toostew.noteShare.exception.pojo.DAO.TagsDAOException;
 import com.toostew.noteShare.exception.pojo.service.TagServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TagService {
@@ -61,40 +62,7 @@ public class TagService {
         }
     }
 
-    //return all tags of a file_record
-    public List<Tags> getAllTagsFromFile_records(File_records file_records){
-        try{
-            //get a list of every file_records_tags linked to a file_records
-            List<File_records_tags> file_records_tagsList = file_records.getFile_records_tags();
-            List<Tags> tagsList = new ArrayList<Tags>();
 
-            //for each file_records_tags, get the tags
-            for(File_records_tags file_records_tags : file_records_tagsList){
-                tagsList.add(file_records_tags.getTags());
-            }
-
-            return tagsList;
-        } catch(Exception e) {
-            throw new TagServiceException("Issue in Tag Service, couldn't get tags (unknown issue)",e);
-        }
-    }
-
-    //get all associated File_records that share a specified tag
-    public List<File_records> getAllFile_records(Tags tags){
-        try{
-            List<File_records_tags> file_records_tagsList = tags.getFile_records_tags();
-            List<File_records> file_recordsList = new ArrayList<File_records>();
-
-            for(File_records_tags file_records_tags : file_records_tagsList){
-                file_recordsList.add(file_records_tags.getFile_records());
-            }
-
-            return file_recordsList;
-        } catch(Exception e) {
-            throw new TagServiceException("Issue in Tag Service, couldn't get tags (unknown issue)",e);
-        }
-
-    }
 
     public boolean tagExists(String name){
         return  tagsDAOImpl.tagExists(name);
@@ -108,21 +76,29 @@ public class TagService {
 
             //for each tag name, search to see if it already exists
             //if yes, return that tag. If not, create a new tag
+            Set<Tags> tagSet = new HashSet<Tags>();
+
             List<Tags> tagList = new ArrayList<>();
 
             for(String tag : tags){
                 tag = tag.toLowerCase().trim();
                 if(tagExists(tag)){
                     Tags tempTag = getTagByName(tag);
-                    tagList.add(tempTag);
+                    tagSet.add(tempTag);
                 } else {
                     //tag doesn't exist, so create it
                     Tags tempTag = new Tags();
                     tempTag.setTag_name(tag);
                     createTag(tempTag); //we upload the tag first, then recapture the tag
                     Tags tempTag2 = getTagByName(tempTag.getTag_name());
-                    tagList.add(tempTag2);
+                    tagSet.add(tempTag2);
                 }
+            }
+
+            //next loop transfer them into a list, done filtering
+            //TODO: there's def a better way to do this without having to use 2 different data structures
+            for(Tags tag : tagSet){
+                tagList.add(tag);
             }
 
             return tagList;
