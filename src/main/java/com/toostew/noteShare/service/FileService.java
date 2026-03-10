@@ -63,10 +63,10 @@ public class FileService {
     }
 
     //create
-    public void createFile_record(File_records file_records){
+    public File_records createFile_record(File_records file_records){
         try{
-            dao.createFile_records(file_records);
             statisticsService.incrementDatabaseTransactions(1);
+            return dao.createFile_records(file_records);
         } catch(File_recordsDAOException e){
             throw new FileServiceException("Issue at FileService, issue with creating File_record",e);
         } catch(StatisticsServiceException e){

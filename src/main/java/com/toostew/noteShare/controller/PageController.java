@@ -10,10 +10,12 @@ import com.toostew.noteShare.service.*;
 import com.toostew.noteShare.service.auth.RegistrationService;
 import com.toostew.noteShare.service.auth.UserService;
 import com.toostew.noteShare.test.TestService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,10 @@ import java.util.List;
 
 @Controller
 public class PageController {
+
+    @Value("${kafka.topic}")
+    private String kafkaTopic;
+
     //front facing api
 
     private S3Client s3client;
@@ -41,11 +47,12 @@ public class PageController {
     private RegistrationService registrationService;
     private TestService testService;
     private TagService tagService;
+    private KafkaTemplate<String, ThumbnailRequest> kafkaTemplateThumbnailRequest;
 
 
     public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,
                           CourseService courseService, UserService userService,  RegistrationService registrationService,
-                          TestService testService, TagService tagService) {
+                          TestService testService, TagService tagService, KafkaTemplate<String, ThumbnailRequest> kafkaTemplateThumbnailRequest) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -55,6 +62,7 @@ public class PageController {
         this.registrationService = registrationService;
         this.testService = testService;
         this.tagService = tagService;
+        this.kafkaTemplateThumbnailRequest = kafkaTemplateThumbnailRequest;
     }
 
     @GetMapping("/")
@@ -251,9 +259,24 @@ public class PageController {
         }
 
         //submission to fileRecords only happens if no exception is returned to prevent false entries
-        //also create file_records_tags
-        fileService.createFile_record(temp);
+        //recapture id for use in thumbnail request
+        File_records recapture = fileService.createFile_record(temp);
 
+        //create a ThumbnailRequest
+        ThumbnailRequest thumbnailRequest = new ThumbnailRequest();
+        thumbnailRequest.setFile_records_id(recapture.getId());
+        thumbnailRequest.setContent_type(content_type);
+        thumbnailRequest.setStored_name(temp.getStored_name());
+
+        //create a thumbnailRequest message
+        kafkaTemplateThumbnailRequest.send(kafkaTopic,String.valueOf(thumbnailRequest.getFile_records_id()) ,thumbnailRequest)
+                .whenComplete((res, e) -> {
+                    if(e == null){
+                        System.out.println("Sending kafka message with thumbnail request: " + thumbnailRequest.toString());
+                    } else {
+                        System.out.println("An unknown issue occured " + e.getMessage());
+                    }
+                });
 
         return "redirect:/upload";
     }

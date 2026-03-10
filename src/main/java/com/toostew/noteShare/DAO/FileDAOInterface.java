@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FileDAOInterface {
 
-    void createFile_records(File_records file_records);
+    File_records createFile_records(File_records file_records);
 
     File_records getFile_recordById(int id);
 

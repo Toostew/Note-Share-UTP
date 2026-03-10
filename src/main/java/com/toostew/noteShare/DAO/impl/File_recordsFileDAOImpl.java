@@ -25,9 +25,10 @@ public class File_recordsFileDAOImpl implements FileDAOInterface {
 
     @Override
     @Transactional
-    public void createFile_records(File_records file_records) {
+    public File_records createFile_records(File_records file_records) {
         try{
             entityManager.persist(file_records);
+            return file_records;
         } catch(EntityExistsException e){
             throw new File_recordsDAOException("Issue at File_recordsDAO, Entry already exists in database!",e);
         } catch(IllegalArgumentException e){
