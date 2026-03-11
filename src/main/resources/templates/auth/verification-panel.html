@@ -70,30 +70,50 @@ spring will look for it in resources/static-->
         </h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div th:each="fileRecord : ${filteredList}">
-                <a th:href="@{/view/{id}(id=${fileRecord.id})}" >
-                    <div class="flex-1 flex p-1 aspect-square overflow-hidden">
-                        <img class="object-cover w-full h-full" th:src="@{/render/{id}(id=${fileRecord.id})}">
+
+            <div class="bg-white rounded-md shadow-md border p-2"
+                 th:each="fileRecord : ${filteredList}">
+
+                <!-- Clickable preview -->
+                <a th:href="@{/view/{id}(id=${fileRecord.id})}">
+                    <div class="flex p-1 aspect-square overflow-hidden">
+                        <img class="object-cover w-full h-full"
+                             th:src="@{/thumbnail/render/{id}(id=${fileRecord.id})}">
                     </div>
-                    <div class="w-full h-full p-2 gap-1 overflow-hidden">
-                        <p  class="text-base " th:text="${fileRecord.original_name}"></p>
+
+                    <div class="p-2 space-y-1 overflow-hidden">
+                        <p class="text-base truncate"
+                           th:text="${fileRecord.original_name}"></p>
 
                         <p th:text="'Id: ' + ${fileRecord.id}"></p>
                         <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
                         <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
                     </div>
-                    <div class="flex flex-row space-x-1">
-                        <form th:action="@{/file-verify/process/delete}" method="post">
-                            <input type="hidden" name="delete" th:value="${fileRecord.id}">
-                            <button type="submit" class="text-white rounded-md bg-red-600 p-4">Delete</button>
-                        </form>
-                        <form th:action="@{/file-verify/process/accept}" method="post">
-                            <input type="hidden" name="accept" th:value="${fileRecord.id}">
-                            <button type="submit" class="text-white rounded-md bg-blue-500 p-4">Accept</button>
-                        </form>
-                    </div>
                 </a>
+
+                <!-- Admin actions -->
+                <div class="flex flex-row gap-2 mt-2">
+
+                    <form th:action="@{/file-verify/process/delete}" method="post">
+                        <input type="hidden" name="delete" th:value="${fileRecord.id}">
+                        <button type="submit"
+                                class="text-white rounded-md bg-red-600 px-3 py-2 w-full">
+                            Delete
+                        </button>
+                    </form>
+
+                    <form th:action="@{/file-verify/process/accept}" method="post">
+                        <input type="hidden" name="accept" th:value="${fileRecord.id}">
+                        <button type="submit"
+                                class="text-white rounded-md bg-blue-500 px-3 py-2 w-full">
+                            Accept
+                        </button>
+                    </form>
+
+                </div>
+
             </div>
+
         </div>
     </main>
 </div>

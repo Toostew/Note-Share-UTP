@@ -150,6 +150,24 @@ public class File_records {
         this.thumbnail = thumbnail;
     }
 
+    //special method to return only one Thumbnail
+    public Thumbnail getSingleThumbnail() {
+        Set<Thumbnail> thumbnails = getThumbnail();
+        Thumbnail temp = new Thumbnail();
+        for(Thumbnail thumbnail : thumbnails){
+            temp = thumbnail;
+        }
+        return temp;
+    }
+
+    public boolean hasThumbnail(){
+        Set<Thumbnail> thumbnails = getThumbnail();
+        if(thumbnails.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return "FILE: " + "\n"

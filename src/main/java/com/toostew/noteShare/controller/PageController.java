@@ -178,10 +178,8 @@ public class PageController {
     }
 
     //Physically looks for a parameter called file, hence, the form input name must be called file as well.
-    /*TODO: alot of the setup for fetching is done right inside the controller. Should shift it so that it is done
-            in a service that accepts parameters. Should make it easier on account of the abstraction
-     */
-    @PostMapping("/fileReceived")
+    //this method is no longer used and has been replaced with method that supports multiple file uploads
+    /*
     public String fileReceived(@RequestParam(name = "file") MultipartFile file,
                                @RequestParam(name = "courseId") int courseId,
                                @RequestParam(name = "tags") String tagsListString,
@@ -206,13 +204,7 @@ public class PageController {
         long size = file.getSize();
         String storage_path = "first-storage";
 
-        /*
-        //debugging only, hardcoded owner stats
-        User tempUser = new User();
-        tempUser.setId(1);
-        tempUser.setPassword("{noop}1234");
-        tempUser.setUsername("admin");
-        */
+
 
         //create user
         User user =  userService.getUserByUsername(authentication.getName());
@@ -279,7 +271,100 @@ public class PageController {
                 });
 
         return "redirect:/upload";
+    } */
+
+
+    //alternative method for handling multiple files
+    @PostMapping("/fileReceived")
+    public String fileReceivedMultiple(@RequestParam(name = "file") MultipartFile[] files,
+                                       @RequestParam(name = "courseId") int courseId,
+                                       @RequestParam(name = "tags") String tagsListString,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes,
+                                       Authentication authentication){
+
+        //parse tags, create them if they havent existed yet
+        List<Tags> tagsList = tagService.createTagListFromString(tagsListString);
+        for(Tags tag : tagsList){
+            tagService.createTag(tag);
+        }
+
+        //perform for EACH file!
+        for(MultipartFile file : files){
+
+            if(file.isEmpty() || file.getSize() == 0){
+                redirectAttributes.addFlashAttribute("error", "Please select a file");
+                return "redirect:/upload";
+            } else if(file.getSize() > 2e+7){
+                redirectAttributes.addFlashAttribute("error", "File size exceeds 20MB");
+                return "redirect:/upload";
+            }
+
+            //create a File_record to store metadata
+            String original_name = file.getOriginalFilename();
+            String stored_name = fileService.createNewFileRecordStoredName(); //this generates with UUID-LOCALDATE
+            String content_type = file.getContentType();
+            long size = file.getSize();
+            String storage_path = "first-storage";
+
+            //create user
+            User user =  userService.getUserByUsername(authentication.getName());
+
+
+
+            LocalDate date_created = LocalDate.now();
+
+            File_records temp = new File_records();
+            temp.setOriginal_name(original_name);
+            temp.setStored_name(stored_name);
+            temp.setContent_type(content_type);
+            temp.setSize(size);
+            temp.setStorage_path(storage_path);
+            temp.setUser(user); //set owner
+            temp.setCourse(courseService.getCourse(courseId)); //set course by selection
+            temp.setDate_created(date_created);
+            temp.setViewable(false);
+
+            //convertMultipartFile into inputStream
+            try{
+                InputStream inputStream = file.getInputStream();
+                //send inputStream to object storage
+                r2Service.postObjectWithBucketAndKey(storage_path,stored_name,inputStream,size,content_type);
+                System.out.println("attempting to communicate with R2");
+
+            } catch(IOException e){
+                //issue with converting into inputstream
+                throw new PageControllerException("Issue in PageController, issue getting inputStream from MultiPartFile",e);
+            } catch(R2ServiceException e){
+                throw new PageControllerException("Issue in PageController, couldn't upload to R2 Service",e);
+            }
+
+            //submission to fileRecords only happens if no exception is returned to prevent false entries
+            //recapture id for use in thumbnail request
+            File_records recapture = fileService.createFile_record(temp);
+
+            //create a ThumbnailRequest
+            ThumbnailRequest thumbnailRequest = new ThumbnailRequest();
+            thumbnailRequest.setFile_records_id(recapture.getId());
+            thumbnailRequest.setContent_type(content_type);
+            thumbnailRequest.setStored_name(temp.getStored_name());
+
+            //create a thumbnailRequest message
+            kafkaTemplateThumbnailRequest.send(kafkaTopic,String.valueOf(thumbnailRequest.getFile_records_id()) ,thumbnailRequest)
+                    .whenComplete((res, e) -> {
+                        if(e == null){
+                            System.out.println("Sending kafka message with thumbnail request: " + thumbnailRequest.toString());
+                        } else {
+                            throw new PageControllerException("PageController: An unknown issue occured ", e);
+                        }
+                    });
+
+
+        }
+
+        return "redirect:/upload";
     }
+
 
     //list every single object in "islands"
     //only files that have viewable == 1
@@ -357,7 +442,7 @@ public class PageController {
 
     //returns a HTTP response used to view images
     @GetMapping("/render/{id}")
-    @ResponseBody
+    @ResponseBody //normally a getMapping would try to resolve to a file with the same name as the return
     public ResponseEntity<Resource> render(@PathVariable int id){
         try{
             File_records temp = fileService.getFile_recordById(id);
