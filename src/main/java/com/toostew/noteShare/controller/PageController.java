@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.extras.springsecurity6.auth.Authorization;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
@@ -36,6 +35,9 @@ public class PageController {
     @Value("${kafka.topic}")
     private String kafkaTopic;
 
+    @Value("${kafka.filescan.topic}")
+    private String kafkaFilescanTopic;
+
     //front facing api
 
     private S3Client s3client;
@@ -47,12 +49,12 @@ public class PageController {
     private RegistrationService registrationService;
     private TestService testService;
     private TagService tagService;
-    private KafkaTemplate<String, ThumbnailRequest> kafkaTemplateThumbnailRequest;
+    private KafkaTemplate<String, processRequest> kafkaTemplateThumbnailRequest;
 
 
     public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,
                           CourseService courseService, UserService userService,  RegistrationService registrationService,
-                          TestService testService, TagService tagService, KafkaTemplate<String, ThumbnailRequest> kafkaTemplateThumbnailRequest) {
+                          TestService testService, TagService tagService, KafkaTemplate<String, processRequest> kafkaTemplateThumbnailRequest) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -344,18 +346,28 @@ public class PageController {
             File_records recapture = fileService.createFile_record(temp);
 
             //create a ThumbnailRequest
-            ThumbnailRequest thumbnailRequest = new ThumbnailRequest();
-            thumbnailRequest.setFile_records_id(recapture.getId());
-            thumbnailRequest.setContent_type(content_type);
-            thumbnailRequest.setStored_name(temp.getStored_name());
+            processRequest processRequest = new processRequest();
+            processRequest.setFile_records_id(recapture.getId());
+            processRequest.setContent_type(content_type);
+            processRequest.setStored_name(temp.getStored_name());
 
             //create a thumbnailRequest message
-            kafkaTemplateThumbnailRequest.send(kafkaTopic,String.valueOf(thumbnailRequest.getFile_records_id()) ,thumbnailRequest)
+            kafkaTemplateThumbnailRequest.send(kafkaTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
                     .whenComplete((res, e) -> {
                         if(e == null){
-                            System.out.println("Sending kafka message with thumbnail request: " + thumbnailRequest.toString());
+                            System.out.println("Sending kafka message with thumbnail request: " + processRequest.toString());
                         } else {
-                            throw new PageControllerException("PageController: An unknown issue occured ", e);
+                            throw new PageControllerException("PageController: An unknown issue occured attempting to send file thumbnail request ", e);
+                        }
+                    });
+
+
+            kafkaTemplateThumbnailRequest.send(kafkaFilescanTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
+                    .whenComplete((res, e) -> {
+                        if(e == null){
+                            System.out.println("Sending kafka message with file scanning request: " + processRequest.toString());
+                        } else {
+                            throw new  PageControllerException("PageController: An unknown issue occured attempting to send file verification request ", e);
                         }
                     });
 

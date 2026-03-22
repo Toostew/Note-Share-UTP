@@ -4,7 +4,7 @@ package com.toostew.noteShare.entity;
 //this is the java class representing a Thumbnail request, and should include the File_recordID and the
 //stored name of the file so the service can look it up directly in R2
 //this pojo is not modeled in the database
-public class ThumbnailRequest {
+public class processRequest {
 
     private int file_records_id;
 
