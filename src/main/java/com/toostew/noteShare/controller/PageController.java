@@ -326,6 +326,8 @@ public class PageController {
             temp.setCourse(courseService.getCourse(courseId)); //set course by selection
             temp.setDate_created(date_created);
             temp.setViewable(false);
+            temp.setVerified("UNVERIFIED");
+
 
             //convertMultipartFile into inputStream
             try{

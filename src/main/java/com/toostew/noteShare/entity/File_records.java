@@ -56,6 +56,10 @@ public class File_records {
     Set<Thumbnail> thumbnail;
 
 
+    //limited to 25 characters
+    @Column(name = "verified")
+    private String verified;
+
     public File_records() {}
 
     public int getId() {
@@ -166,6 +170,14 @@ public class File_records {
             return false;
         }
         return true;
+    }
+
+    public String getVerified() {
+        return verified;
+    }
+
+    public void setVerified(String verified) {
+        this.verified = verified;
     }
 
     @Override
