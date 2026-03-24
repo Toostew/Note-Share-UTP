@@ -24,6 +24,7 @@ public class SecurityConfig {
                                 .requestMatchers("/upload").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/fileReceived").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/file-verify/**").hasAnyRole("ADMIN") //all file-verify pages are admin only
+                                //.requestMatchers("/actuator/prometheus").hasAnyRole("MONITOR") //for prometheus specifically
                                 .anyRequest().permitAll() //every other page can be freely accessed
                                 )
                 .formLogin(formLogin ->
