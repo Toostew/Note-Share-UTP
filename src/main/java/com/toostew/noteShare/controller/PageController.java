@@ -25,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -49,12 +48,12 @@ public class PageController {
     private RegistrationService registrationService;
     private TestService testService;
     private TagService tagService;
-    private KafkaTemplate<String, processRequest> kafkaTemplateThumbnailRequest;
+    private KafkaTemplate<String, ProcessRequest> kafkaTemplateThumbnailRequest;
 
 
     public PageController(S3Client s3client,R2Service r2Service,FileService fileService,StatisticsService statisticsService,
                           CourseService courseService, UserService userService,  RegistrationService registrationService,
-                          TestService testService, TagService tagService, KafkaTemplate<String, processRequest> kafkaTemplateThumbnailRequest) {
+                          TestService testService, TagService tagService, KafkaTemplate<String, ProcessRequest> kafkaTemplateThumbnailRequest) {
         this.s3client = s3client;
         this.r2Service = r2Service;
         this.fileService = fileService;
@@ -328,52 +327,33 @@ public class PageController {
             temp.setViewable(false);
             temp.setVerified("UNVERIFIED");
 
-
-            //convertMultipartFile into inputStream
-            try{
-                InputStream inputStream = file.getInputStream();
-                //send inputStream to object storage
-                r2Service.postObjectWithBucketAndKey(storage_path,stored_name,inputStream,size,content_type);
-                System.out.println("attempting to communicate with R2");
-
-            } catch(IOException e){
-                //issue with converting into inputstream
-                throw new PageControllerException("Issue in PageController, issue getting inputStream from MultiPartFile",e);
-            } catch(R2ServiceException e){
-                throw new PageControllerException("Issue in PageController, couldn't upload to R2 Service",e);
-            }
-
             //submission to fileRecords only happens if no exception is returned to prevent false entries
             //recapture id for use in thumbnail request
             File_records recapture = fileService.createFile_record(temp);
 
             //create a ThumbnailRequest
-            processRequest processRequest = new processRequest();
+            ProcessRequest processRequest = new ProcessRequest();
             processRequest.setFile_records_id(recapture.getId());
             processRequest.setContent_type(content_type);
             processRequest.setStored_name(temp.getStored_name());
 
-            //create a thumbnailRequest message
-            kafkaTemplateThumbnailRequest.send(kafkaTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
-                    .whenComplete((res, e) -> {
-                        if(e == null){
-                            System.out.println("Sending kafka message with thumbnail request: " + processRequest.toString());
-                        } else {
-                            throw new PageControllerException("PageController: An unknown issue occured attempting to send file thumbnail request ", e);
-                        }
-                    });
 
 
-            kafkaTemplateThumbnailRequest.send(kafkaFilescanTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
-                    .whenComplete((res, e) -> {
-                        if(e == null){
-                            System.out.println("Sending kafka message with file scanning request: " + processRequest.toString());
-                        } else {
-                            throw new  PageControllerException("PageController: An unknown issue occured attempting to send file verification request ", e);
-                        }
-                    });
+            //convertMultipartFile into byte Array
+            try{
+                byte[] item = file.getBytes();
+                //send inputStream to object storage
+                r2Service.postObjectWithBucketAndKey(storage_path,stored_name,item,size,content_type, processRequest);
+                System.out.println("attempting to communicate with R2");
 
+            } catch(IOException e){
+                //issue with converting into byte array
+                throw new PageControllerException("Issue in PageController, issue getting byte array from MultiPartFile",e);
+            } catch(R2ServiceException e){
+                throw new PageControllerException("Issue in PageController, couldn't upload to R2 Service",e);
+            }
 
+ 
         }
 
         return "redirect:/upload";

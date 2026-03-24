@@ -1,12 +1,16 @@
 package com.toostew.noteShare.service;
 
+import com.toostew.noteShare.entity.ProcessRequest;
 import com.toostew.noteShare.exception.pojo.awsSDKexceptions.R2ServiceException;
+import com.toostew.noteShare.exception.pojo.other.PageControllerException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
@@ -17,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,10 +32,20 @@ public class R2Service {
 
     private S3Client s3client;
     private StatisticsService statisticsService;
+    private KafkaTemplate<String, ProcessRequest> kafkaTemplate;
 
-    public R2Service(S3Client s3client,StatisticsService statisticsService) {
+
+    @Value("${kafka.topic}")
+    private String kafkaTopic;
+
+    @Value("${kafka.filescan.topic}")
+    private String kafkaFilescanTopic;
+
+    public R2Service(S3Client s3client,StatisticsService statisticsService,
+                     KafkaTemplate<String, ProcessRequest> kafkaTemplate) {
         this.s3client = s3client; //s3client is the class that handles all the r2 operations. think of it as a DAO
         this.statisticsService = statisticsService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
 
@@ -101,9 +116,13 @@ public class R2Service {
     }
     */
 
-
-    public void postObjectWithBucketAndKey(String bucket, String key, InputStream inputStream, long size, String contentType){
-        try{
+    //@Async will make this run as a background thread and is non-blocking (as it completes it does not
+    //prevent code from running)
+    //because it is async we must also handle the kafka messaging because we need this to be done sequentially,
+    //as in, Object must be in R2 before the Thumbnail and file scanner services can work
+    @Async
+    public void postObjectWithBucketAndKey(String bucket, String key, byte[] item, long size, String contentType, ProcessRequest processRequest){
+        try(InputStream inputStream = new ByteArrayInputStream(item)){
 
             s3client.putObject(PutObjectRequest.builder()
                             .bucket(bucket)
@@ -116,9 +135,31 @@ public class R2Service {
             //if there is no issue, increment the statistics
             statisticsService.incrementEgressVolume(size);
             statisticsService.incrementObjectTrasactions();
+
+            //create a thumbnailRequest message
+            kafkaTemplate.send(kafkaTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
+                    .whenComplete((res, e) -> {
+                        if(e == null){
+                            System.out.println("Sending kafka message with thumbnail request: " + processRequest.toString());
+                        } else {
+                            throw new PageControllerException("PageController: An unknown issue occured attempting to send file thumbnail request ", e);
+                        }
+                    });
+
+
+            kafkaTemplate.send(kafkaFilescanTopic,String.valueOf(processRequest.getFile_records_id()) ,processRequest)
+                    .whenComplete((res, e) -> {
+                        if(e == null){
+                            System.out.println("Sending kafka message with file scanning request: " + processRequest.toString());
+                        } else {
+                            throw new  PageControllerException("PageController: An unknown issue occured attempting to send file verification request ", e);
+                        }
+                    });
         } catch (AwsServiceException e){
             throw new R2ServiceException("Issue with Post Object at R2Service layer, R2 Server issue",e);
         } catch (SdkClientException e){
+            throw new R2ServiceException("Issue with Post Object at R2Service layer, client issue",e);
+        } catch (IOException e){
             throw new R2ServiceException("Issue with Post Object at R2Service layer, client issue",e);
         }
 

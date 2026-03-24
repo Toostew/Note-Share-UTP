@@ -1,6 +1,6 @@
 package com.toostew.noteShare.config;
 
-import com.toostew.noteShare.entity.processRequest;
+import com.toostew.noteShare.entity.ProcessRequest;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -34,7 +34,7 @@ public class KafkaConfig {
 
 
     @Bean
-    public ProducerFactory<String, processRequest> producerFactory() {
+    public ProducerFactory<String, ProcessRequest> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
@@ -50,7 +50,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, processRequest> kafkaTemplate() {
+    public KafkaTemplate<String, ProcessRequest> kafkaTemplate() {
         return new KafkaTemplate(producerFactory());
     }
 
