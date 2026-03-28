@@ -326,6 +326,7 @@ public class PageController {
             temp.setDate_created(date_created);
             temp.setViewable(false);
             temp.setVerified("UNVERIFIED");
+            temp.setTags(tagsList);
 
             //submission to fileRecords only happens if no exception is returned to prevent false entries
             //recapture id for use in thumbnail request
@@ -362,6 +363,7 @@ public class PageController {
 
     //list every single object in "islands"
     //only files that have viewable == 1
+    //this is technically deprecated, but keep it up for debugging
     @GetMapping("/view-all")
     public String view(Model model){
         //for now we want to just view all of the items so -1

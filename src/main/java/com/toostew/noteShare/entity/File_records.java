@@ -45,7 +45,7 @@ public class File_records {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "file_records_tags",
             joinColumns = @JoinColumn(name = "file_records_id"),

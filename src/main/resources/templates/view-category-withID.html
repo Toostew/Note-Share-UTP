@@ -77,6 +77,14 @@
                         <p th:text="'Id: ' + ${fileRecord.id}"></p>
                         <p th:text="'Type: ' + ${fileRecord.content_type}"></p>
                         <p th:text="'Date: ' + ${fileRecord.date_created}"></p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="text-xs font-medium text-gray-500">Tags:</span>
+                            <span th:each="tag : ${fileRecord.tags}"
+                                  th:text="${tag.getTag_name()}"
+                                  class="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-[10px]">
+                            </span>
+                        </div>
+
                     </div>
                 </a>
 

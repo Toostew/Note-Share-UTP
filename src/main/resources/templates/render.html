@@ -66,6 +66,13 @@
             <h1 class="text-base font-mono tracking-tight" th:text="${file_record.stored_name}"></h1>
             <h1 class="text-base font-mono tracking-tight" th:text="${file_record.storage_path}"></h1>
             <h1 class="text-base font-mono tracking-tight" th:text="${file_record.id}"></h1>
+            <div class="flex flex-wrap items-center gap-2 mt-2">
+                <span class="text-base font-mono tracking-tight text-gray-600">Tags:</span>
+                <span th:each="tag : ${file_record.tags}"
+                      th:text="${tag.getTag_name()}"
+                      class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-md font-mono text-sm border border-blue-200">
+                </span>
+            </div>
         </div>
 
         <!--display this if the file is an image-->
