@@ -52,6 +52,8 @@ of which is used specifically for testing. Be sure to change the current active 
 
 Optionally (and most recommended for prod environments), you could consolidate these within a .env file and reference it within the docker file.
 
+Do note that in my design, MYSQL is hosted on a seperate server entirely. If you wish to run it differently (perhaps in it's own container), you would have to modify the contents of the compose.yaml
+
 ### 4. Run with Docker Compose
 
 Navigate to the Note-Share-UTP root directory and trigger the build:
@@ -59,8 +61,6 @@ Navigate to the Note-Share-UTP root directory and trigger the build:
 docker compose build up
 ```
 This command will:
-
-* Spin up a MySQL instance.
 
 * Start Apache Kafka and Zookeeper.
 
